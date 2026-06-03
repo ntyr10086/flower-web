@@ -533,6 +533,7 @@
 
             <div class="nav-tabs" id="navTabs">
                 <button class="nav-tab active" onclick="switchSection('dashboard', this)">📊 儀表板</button>
+                <button class="nav-tab user-nav" style="display:none;" onclick="switchSection('inventory', this)">🌸 花卉庫存</button>
                 <button class="nav-tab user-nav" style="display:none;" onclick="switchSection('emotions', this)">💭 記錄心情</button>
                 <button class="nav-tab" onclick="switchSection('flowers', this)">🌺 花語圖鑑</button>
                 <button class="nav-tab" onclick="switchSection('shop', this)">🛍️ 商店</button>
@@ -552,17 +553,22 @@
                         </div>
                         <div class="stat-box">
                             <div class="number" id="totalPoints">0</div>
-                            <div class="label">獲得積分</div>
+                            <div class="label">花朵點數</div>
                         </div>
                         <div class="stat-box">
                             <div class="number" id="totalFlowers">0</div>
-                            <div class="label">花卉收集</div>
+                            <div class="label">花卉圖鑑</div>
                         </div>
                     </div>
                     <div class="chart-container">
                         <canvas id="emotionChart"></canvas>
                     </div>
                 </div>
+            </div>
+
+            <!-- FLOWER INVENTORY SECTION -->
+            <div id="inventory" class="section">
+                <div id="inventoryContent"></div>
             </div>
 
             <!-- EMOTION RECORD SECTION -->
@@ -753,6 +759,7 @@
         <!-- BOTTOM NAVIGATION -->
         <div class="bottom-nav">
             <button class="nav-btn active" onclick="switchSection('dashboard', this)">📊 儀表板</button>
+            <button class="nav-btn user-nav" style="display:none;" onclick="switchSection('inventory', this)">🌸 庫存</button>
             <button class="nav-btn user-nav" style="display:none;" onclick="switchSection('emotions', this)">💭 心情</button>
             <button class="nav-btn" onclick="switchSection('flowers', this)">🌺 圖鑑</button>
             <button class="nav-btn" onclick="switchSection('shop', this)">🛍️ 商店</button>
@@ -788,6 +795,17 @@
         // ===== STATE =====
         let currentUser = null;
         let emotionData = [];
+        let userInventory = []; // 用戶已解鎖商品列表
+        let todayFlower = null; // 今日推薦的花卉
+
+        // ===== 匿名代稱生成系統 =====
+        const flowerAdjectives = ['暗戀的', '夢幻的', '溫暖的', '勇敢的', '寧靜的', '開朗的', '神祕的', '溫柔的', '熾熱的', '優雅的'];
+        
+        function generateAnonymousNickname(flower) {
+            const adjective = flowerAdjectives[Math.floor(Math.random() * flowerAdjectives.length)];
+            const number = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+            return `${adjective}${flower.cn} #${number}`;
+        }
 
         // ===== LOGIN FUNCTIONS =====
         // 存儲註冊用戶
@@ -865,7 +883,11 @@
                 document.querySelectorAll('.user-nav').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.admin-nav').forEach(el => el.style.display = 'block');
             } else {
-                document.getElementById('appHeader').innerHTML = '<h1>💭 ' + currentUser.username + ' 的花語世界</h1><p>記錄你的心情，探索花語的智慧</p>';
+                // 生成匿名代稱（非管理員才需要）
+                if (!currentUser.anonymousNickname) {
+                    currentUser.anonymousNickname = generateAnonymousNickname(flowers[0]);
+                }
+                document.getElementById('appHeader').innerHTML = '<h1>💭 ' + currentUser.anonymousNickname + ' 的花語世界</h1><p>記錄你的心情，探索花語的智慧</p>';
                 document.querySelectorAll('.user-nav').forEach(el => el.style.display = 'block');
                 document.querySelectorAll('.admin-nav').forEach(el => el.style.display = 'none');
             }
@@ -1029,6 +1051,7 @@
             renderShop();
             renderFlowerManagement();
             renderShopManagement();
+            document.getElementById('inventoryContent').innerHTML = renderFlowerInventory();
             renderDashboard();
         }
 
@@ -1039,26 +1062,32 @@
             document.getElementById('valenceValue').textContent = valence.toFixed(1);
             document.getElementById('arousalValue').textContent = arousal.toFixed(1);
 
-            // Find closest flowers
-            const recommended = flowers
+            // 計算最接近的花卉 - 只返回最相近的 1 個
+            const closest = flowers
                 .map(f => ({
                     ...f,
                     distance: Math.sqrt(Math.pow(valence - f.valence, 2) + Math.pow(arousal - f.arousal, 2))
                 }))
-                .sort((a, b) => a.distance - b.distance)
-                .slice(0, 3);
+                .sort((a, b) => a.distance - b.distance)[0];
 
-            renderRecommended(recommended);
+            // 設定今日推薦花卉
+            if (closest) {
+                todayFlower = closest;
+                renderRecommended(closest);
+            }
         }
 
-        function renderRecommended(flowers) {
-            const html = flowers.map(f => `
-                <div class="flower-card">
-                    <div class="flower-icon">${f.emoji}</div>
-                    <h3>${f.cn}</h3>
-                    <p>${f.language}</p>
+        function renderRecommended(flower) {
+            const html = `
+                <div class="flower-card" style="background: linear-gradient(135deg, rgba(230, 161, 92, 0.1) 0%, rgba(107, 203, 119, 0.1) 100%); border: 3px solid var(--primary-warm); transform: scale(1.05);">
+                    <div class="flower-icon">${flower.emoji}</div>
+                    <h3>${flower.cn}</h3>
+                    <p>${flower.language}</p>
+                    <div style="background: var(--primary-warm); color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.9rem; margin-top: 0.5rem;">
+                        ⭐ 今日最適合你
+                    </div>
                 </div>
-            `).join('');
+            `;
             document.getElementById('recommendedFlowers').innerHTML = html;
         }
 
@@ -1074,14 +1103,44 @@
         }
 
         function renderShop() {
-            const html = shopItems.map(item => `
-                <div class="flower-card">
-                    <div class="flower-icon">${item.emoji}</div>
-                    <h3>${item.name}</h3>
-                    <p>${item.category} · ${item.cost} 積分</p>
-                </div>
-            `).join('');
+            const html = shopItems.map(item => {
+                const isPurchased = userInventory.includes(item.id);
+                const button = isPurchased 
+                    ? `<button disabled style="background: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 8px; cursor: default; font-weight: 600; width: 100%;">✅ 已擁有</button>`
+                    : `<button onclick="purchaseItem('${item.id}', ${item.cost})" style="background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%); color: white; padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; width: 100%;">🛒 購買 (${item.cost} 💐)</button>`;
+                
+                return `
+                    <div class="flower-card">
+                        <div class="flower-icon">${item.emoji}</div>
+                        <h3>${item.name}</h3>
+                        <p>${item.category}</p>
+                        <p style="font-size: 0.9rem; color: var(--primary-warm); font-weight: 600; margin: 0.5rem 0;">💐 ${item.cost} 點數</p>
+                        <div style="margin-top: 1rem;">
+                            ${button}
+                        </div>
+                    </div>
+                `;
+            }).join('');
             document.getElementById('shopItems').innerHTML = html;
+        }
+
+        function purchaseItem(itemId, cost) {
+            // 檢查積分是否足夠
+            if (currentUser.points < cost) {
+                alert('🌸 哎呀，花朵點數還不夠喔！\n\n目前積分：' + currentUser.points + ' 💐\n所需積分：' + cost + ' 💐\n\n快去寫日記賺點數吧！📝');
+                return;
+            }
+
+            // 扣除積分
+            currentUser.points -= cost;
+            userInventory.push(itemId);
+
+            // 更新顯示
+            document.getElementById('totalPoints').textContent = currentUser.points;
+            renderShop();
+            
+            // 提示成功
+            alert('✅ 購買成功！\n\n✨ 您已解鎖此商品\n💐 剩餘積分：' + currentUser.points);
         }
 
         function renderDashboard() {
@@ -1123,11 +1182,83 @@
         }
 
         function recordEmotion() {
+            if (!todayFlower) {
+                alert('❌ 請先調整心情滑桿！');
+                return;
+            }
+
             const valence = document.getElementById('valenceSlider').value;
             const arousal = document.getElementById('arousalSlider').value;
-            alert('✅ 心情已記錄！\n愉悅度：' + valence + '\n能量水平：' + arousal);
+            
+            // 記錄情緒數據
+            emotionData.push({
+                date: new Date().toLocaleDateString('zh-TW'),
+                valence: parseFloat(valence),
+                arousal: parseFloat(arousal),
+                flower: todayFlower.cn,
+                flowerId: todayFlower.id
+            });
+
+            // 更新用戶統計
             currentUser.diaries = (currentUser.diaries || 0) + 1;
             currentUser.points = (currentUser.points || 0) + 50;
+
+            // 更新儀表板顯示
+            document.getElementById('totalDiaries').textContent = currentUser.diaries;
+            document.getElementById('totalPoints').textContent = currentUser.points;
+
+            alert('✅ 心情已記錄！\n\n🌸 今日代表花：' + todayFlower.cn + '\n💐 獲得 50 點積分\n\n繼續加油！');
+            
+            // 重置滑桿
+            document.getElementById('valenceSlider').value = 0;
+            document.getElementById('arousalSlider').value = 0;
+            updateEmotion();
+        }
+
+        function renderFlowerInventory() {
+            const html = `
+                <div class="card">
+                    <h2>🌸 我的花卉庫存</h2>
+                    
+                    ${todayFlower ? `
+                    <div style="background: linear-gradient(135deg, rgba(230, 161, 92, 0.2) 0%, rgba(107, 203, 119, 0.2) 100%); border: 3px solid var(--primary-warm); border-radius: 15px; padding: 2rem; margin-bottom: 2rem; text-align: center;">
+                        <p style="color: var(--primary-warm); font-weight: 600; margin-bottom: 0.5rem; font-size: 1.1rem;">⭐ 今日最適合你的花</p>
+                        <div style="font-size: 4rem; margin: 1rem 0;">${todayFlower.emoji}</div>
+                        <h3 style="color: var(--primary-brown); margin: 0.5rem 0;">${todayFlower.cn}</h3>
+                        <p style="color: var(--text-dark); font-size: 1rem; margin: 0.5rem 0;">💝 ${todayFlower.language}</p>
+                        <p style="color: var(--text-light); font-size: 0.95rem; margin-top: 1rem;">記錄你的心情，這朵花就代表著今天的你 🌷</p>
+                    </div>
+                    ` : `
+                    <div style="background: var(--light-bg); border-radius: 15px; padding: 2rem; text-align: center; margin-bottom: 2rem;">
+                        <p style="color: var(--text-light); font-size: 1.1rem;">📝 前往「記錄心情」頁面</p>
+                        <p style="color: var(--text-light); margin-top: 0.5rem;">調整心情滑桿，發現今日最適合的花卉</p>
+                    </div>
+                    `}
+
+                    <h3 style="margin: 2rem 0 1rem; color: var(--primary-brown);">📊 情緒記錄歷史</h3>
+                    ${emotionData.length > 0 ? `
+                        <div style="display: grid; gap: 1rem;">
+                            ${emotionData.slice(-5).reverse().map(entry => `
+                                <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--primary-warm); box-shadow: 0 2px 8px rgba(102, 85, 68, 0.08);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <p style="margin: 0; color: var(--primary-brown); font-weight: 600;">📅 ${entry.date}</p>
+                                            <p style="margin: 0.5rem 0 0; color: var(--text-light);">🌸 ${entry.flower}</p>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <small style="display: block; color: var(--text-light);">愉悅度：<strong>${entry.valence}</strong></small>
+                                            <small style="display: block; color: var(--text-light); margin-top: 0.3rem;">能量：<strong>${entry.arousal}</strong></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : `
+                        <p style="text-align: center; color: var(--text-light); padding: 2rem;">還沒有記錄，開始寫日記吧！📝</p>
+                    `}
+                </div>
+            `;
+            return html;
         }
 
         function logout() {
