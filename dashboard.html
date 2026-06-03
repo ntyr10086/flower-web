@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的花園 - Flower Language</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="../data/schema.js"></script>
+    <style>
+        :root {
+            --primary-warm: #E6A15C;
+            --primary-brown: #966F46;
+            --bg-cream: #FDFBF7;
+            --accent-tan: #D4A574;
+            --light-bg: #F5EBE6;
+            --text-dark: #4A3728;
+            --text-light: #7A6B60;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #F9F3EB 100%);
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 0 0 20px 20px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(230, 161, 92, 0.3);
+            margin-bottom: 3rem;
+        }
+
+        .greeting-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .greeting-subtext {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .dashboard-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(230, 161, 92, 0.15);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary-warm);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-label {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .card-action-btn {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(230, 161, 92, 0.3);
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+            margin: 0 2rem 3rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .chart-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary-brown);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #emotionChart {
+            max-height: 400px;
+        }
+
+        .nav-bar {
+            background: white;
+            border-top: 1px solid var(--light-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            position: sticky;
+            bottom: 0;
+            box-shadow: 0 -2px 8px rgba(102, 85, 68, 0.05);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            text-decoration: none;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-item:hover {
+            color: var(--primary-warm);
+            background: var(--light-bg);
+        }
+
+        .nav-item.active {
+            color: var(--primary-warm);
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+        }
+
+        .nav-label {
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+                gap: 1.5rem;
+            }
+
+            .greeting-text {
+                font-size: 1.8rem;
+            }
+
+            .nav-bar {
+                padding: 0.8rem 1rem;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 歡迎標題 -->
+    <div class="dashboard-header">
+        <h1 class="greeting-text">🌸 歡迎回到你的花園</h1>
+        <p class="greeting-subtext" id="username-display">用戶名稱</p>
+    </div>
+
+    <!-- 主儀表板卡片 -->
+    <div class="dashboard-grid">
+        <!-- 統計卡片 -->
+        <div class="dashboard-card">
+            <div class="card-icon">📝</div>
+            <div class="card-number" id="diary-count">0</div>
+            <div class="card-label">篇日記已撰寫</div>
+            <button class="card-action-btn" onclick="goToNewDiary()">寫新日記</button>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon">🌺</div>
+            <div class="card-number" id="points-display">0</div>
+            <div class="card-label">花朵點數</div>
+            <button class="card-action-btn" onclick="goToShop()">前往商店</button>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-icon">🏆</div>
+            <div class="card-number" id="streak-display">0</div>
+            <div class="card-label">連續記錄天數</div>
+            <button class="card-action-btn" onclick="goToGuide()">花語圖鑑</button>
+        </div>
+    </div>
+
+    <!-- 情緒統計圖表 -->
+    <div class="chart-container">
+        <h2 class="chart-title">📊 我的心靈狀態分析</h2>
+        <p style="text-align: center; color: var(--text-light); margin-bottom: 1.5rem; font-size: 0.9rem;">
+            過去 30 天的情緒趨勢與代表花朵分布
+        </p>
+        <div style="position: relative; height: 400px;">
+            <canvas id="emotionChart"></canvas>
+        </div>
+    </div>
+
+    <!-- 今日心靈語錄 -->
+    <div class="dashboard-grid" style="margin-bottom: 3rem;">
+        <div class="dashboard-card" style="grid-column: span 1;">
+            <div class="card-icon">✨</div>
+            <h3 style="color: var(--primary-warm); margin: 1rem 0;">今日心靈語錄</h3>
+            <p id="daily-quote" style="color: var(--text-light); line-height: 1.8; font-style: italic;">
+                正在加載靈感語錄...
+            </p>
+            <button class="card-action-btn" onclick="getNewQuote()" style="margin-top: 1rem;">
+                換一句語錄
+            </button>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="nav-bar">
+        <a class="nav-item active" href="./dashboard.html">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">主頁</span>
+        </a>
+        <a class="nav-item" href="./emotion-record.html">
+            <span class="nav-icon">💭</span>
+            <span class="nav-label">記錄心情</span>
+        </a>
+        <a class="nav-item" href="./flower-guide.html">
+            <span class="nav-icon">🌺</span>
+            <span class="nav-label">花語圖鑑</span>
+        </a>
+        <a class="nav-item" href="./shop.html">
+            <span class="nav-icon">🛍️</span>
+            <span class="nav-label">虛擬商店</span>
+        </a>
+        <a class="nav-item" href="./forum.html">
+            <span class="nav-icon">💬</span>
+            <span class="nav-label">匿名廣場</span>
+        </a>
+        <a class="nav-item" href="../index.html" onclick="logout()">
+            <span class="nav-icon">🚪</span>
+            <span class="nav-label">登出</span>
+        </a>
+    </div>
+
+    <script>
+        // 心靈語錄資料庫
+        const quotes = [
+            "「每一朵花都有自己的季節，你也不例外。」",
+            "「平靜不是缺乏情緒，而是能夠在風雨中保持內心的安定。」",
+            "「感受你的感受，它們都是真實且有效的。」",
+            "「療癒不是一步到位，而是每一天慢慢地綻放。」",
+            "「你的脆弱，正是你最強大的地方。」",
+            "「即使在最黑暗的時刻，星星仍然在天空中閃閃發光。」",
+            "「允許自己今天休息，明天會有新的力量。」",
+            "「在寧靜的花園裡，所有的傷痛都能得到療癒。」",
+            "「你已經走過了最困難的時刻，相信你的力量。」",
+            "「每一次呼吸都是重新開始的機會。」",
+            "「溫柔對待自己，就像你對待所愛之人一樣。」",
+            "「花朵在雨中綻放得最美，而你也將因此變得更美麗。」"
+        ];
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // 更新用戶名稱
+            document.getElementById('username-display').textContent = `👋 ${user.username}，很高興再次見到你`;
+
+            // 更新統計數據（實際應從後端取得）
+            document.getElementById('diary-count').textContent = user.totalDiaries || 0;
+            document.getElementById('points-display').textContent = user.totalPoints || 0;
+            document.getElementById('streak-display').textContent = user.streak || 0;
+
+            // 加載每日語錄
+            getNewQuote();
+
+            // 初始化圖表
+            initializeChart();
+        });
+
+        function getNewQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            document.getElementById('daily-quote').textContent = quotes[randomIndex];
+        }
+
+        function initializeChart() {
+            const ctx = document.getElementById('emotionChart');
+            if (!ctx) return;
+
+            // 模擬數據（實際應從用戶日記歷史取得）
+            const mockData = {
+                labels: ['第1週', '第2週', '第3週', '第4週'],
+                datasets: [
+                    {
+                        label: '平均愉悅度',
+                        data: [0.3, 0.5, 0.4, 0.6],
+                        borderColor: '#E6A15C',
+                        backgroundColor: 'rgba(230, 161, 92, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 2
+                    },
+                    {
+                        label: '平均能量水平',
+                        data: [-0.2, 0.1, 0.3, 0.4],
+                        borderColor: '#6ECB63',
+                        backgroundColor: 'rgba(110, 203, 99, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 2
+                    }
+                ]
+            };
+
+            new Chart(ctx, {
+                type: 'line',
+                data: mockData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                font: { family: "'Lora', serif", size: 14 },
+                                color: '#7A6B60',
+                                padding: 15
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: -1,
+                            max: 1,
+                            grid: {
+                                color: 'rgba(230, 161, 92, 0.1)'
+                            },
+                            ticks: {
+                                font: { family: "'Lora', serif" },
+                                color: '#7A6B60'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(230, 161, 92, 0.05)'
+                            },
+                            ticks: {
+                                font: { family: "'Lora', serif" },
+                                color: '#7A6B60'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function goToNewDiary() {
+            window.location.href = './emotion-record.html';
+        }
+
+        function goToShop() {
+            window.location.href = './shop.html';
+        }
+
+        function goToGuide() {
+            window.location.href = './flower-guide.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = '../index.html';
+        }
+    </script>
+</body>
+</html>

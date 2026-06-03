@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記錄心情 - Flower Language</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="../data/schema.js"></script>
+    <script src="../js/emotion-algorithm.js"></script>
+    <style>
+        :root {
+            --primary-warm: #E6A15C;
+            --primary-brown: #966F46;
+            --bg-cream: #FDFBF7;
+            --accent-tan: #D4A574;
+            --light-bg: #F5EBE6;
+            --text-dark: #4A3728;
+            --text-light: #7A6B60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #F9F3EB 100%);
+            font-family: 'Lora', serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary-warm);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* ========== Russell Circumplex 情緒模型 ========== */
+        .emotion-grid-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary-brown);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Russell Model Grid */
+        .russell-model {
+            background: linear-gradient(135deg, #FFF5E6 0%, #F5E6D3 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid var(--light-bg);
+            position: relative;
+        }
+
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .quadrant {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--light-bg);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .quadrant:hover {
+            border-color: var(--primary-warm);
+            box-shadow: 0 6px 16px rgba(230, 161, 92, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .quadrant.active {
+            background: linear-gradient(135deg, rgba(230, 161, 92, 0.1) 0%, rgba(212, 165, 116, 0.1) 100%);
+            border-color: var(--primary-warm);
+        }
+
+        .quadrant-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .quadrant-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--primary-brown);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .quadrant-description {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        /* Slider Sections */
+        .slider-section {
+            margin-bottom: 2rem;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+
+        .slider-label-text {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .slider-value {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .slider-track {
+            position: relative;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(to right, 
+                #FF6B6B 0%,      /* 負向 */
+                #FFD4A3 25%,
+                #D4A574 50%,     /* 中立 */
+                #FFD4A3 75%,
+                #6ECB63 100%     /* 正向 */
+            );
+            border-radius: 3px;
+            margin-bottom: 1rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: transparent;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--primary-warm);
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(230, 161, 92, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            width: 28px;
+            height: 28px;
+            box-shadow: 0 6px 12px rgba(230, 161, 92, 0.4);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid var(--primary-warm);
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(230, 161, 92, 0.3);
+        }
+
+        .scale-markers {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        /* Valence Axis */
+        .valence-section {
+            background: linear-gradient(to right, 
+                rgba(255, 107, 107, 0.05) 0%,
+                transparent 50%,
+                rgba(110, 203, 99, 0.05) 100%
+            );
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-warm);
+        }
+
+        /* Arousal Axis */
+        .arousal-section {
+            background: linear-gradient(to right,
+                rgba(150, 111, 70, 0.05) 0%,
+                transparent 50%,
+                rgba(230, 161, 92, 0.05) 100%
+            );
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-tan);
+        }
+
+        /* 推薦結果 */
+        .recommendations-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(230, 161, 92, 0.2);
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .flower-card {
+            background: linear-gradient(135deg, #FFF5E6 0%, #F5E6D3 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--light-bg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flower-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(230, 161, 92, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flower-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(230, 161, 92, 0.2);
+            border-color: var(--primary-warm);
+        }
+
+        .flower-card:hover::before {
+            opacity: 1;
+        }
+
+        .flower-card.selected {
+            background: linear-gradient(135deg, rgba(230, 161, 92, 0.2) 0%, rgba(212, 165, 116, 0.2) 100%);
+            border-color: var(--primary-warm);
+            box-shadow: 0 16px 32px rgba(230, 161, 92, 0.25);
+        }
+
+        .flower-emoji {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .flower-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--primary-brown);
+            margin-bottom: 0.3rem;
+        }
+
+        .flower-chinese {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.8rem;
+        }
+
+        .flower-language {
+            font-style: italic;
+            color: var(--primary-warm);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .flower-description {
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .match-score {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* 按鈕 */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(230, 161, 92, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(230, 161, 92, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-warm);
+            border: 2px solid var(--primary-warm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-bg);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        .loading.show {
+            display: block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 768px) {
+            .model-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-title {
+                font-size: 2rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 頁面標題 -->
+        <div class="header">
+            <h1 class="header-title">🌿 今天的心情是？</h1>
+            <p class="header-subtitle">用兩個維度來描述你的情緒，讓花朵為你發聲</p>
+        </div>
+
+        <!-- Russell Circumplex Model 部分 -->
+        <div class="emotion-grid-section">
+            <h2 class="section-title">📊 感受你的情緒</h2>
+
+            <!-- 四個象限視覺化 -->
+            <div class="russell-model">
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                    ⬅️ 不愉悅 | 愉悅 ➡️ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ⬇️ 低能量 | 高能量 ⬆️
+                </p>
+
+                <div class="model-grid">
+                    <div class="quadrant" onclick="selectQuadrant(1)">
+                        <div class="quadrant-emoji">😄</div>
+                        <div class="quadrant-name">開心 + 活力</div>
+                        <div class="quadrant-description">充滿能量、樂觀、興奮</div>
+                    </div>
+                    <div class="quadrant" onclick="selectQuadrant(2)">
+                        <div class="quadrant-emoji">😊</div>
+                        <div class="quadrant-name">平靜 + 滿足</div>
+                        <div class="quadrant-description">放鬆、安心、內在平和</div>
+                    </div>
+                    <div class="quadrant" onclick="selectQuadrant(3)">
+                        <div class="quadrant-emoji">😔</div>
+                        <div class="quadrant-name">難過 + 疲憊</div>
+                        <div class="quadrant-description">沮喪、無力、低落</div>
+                    </div>
+                    <div class="quadrant" onclick="selectQuadrant(4)">
+                        <div class="quadrant-emoji">😠</div>
+                        <div class="quadrant-name">焦慮 + 活力</div>
+                        <div class="quadrant-description">緊張、躁動、不安</div>
+                    </div>
+                </div>
+
+                <!-- Valence 滑桿 (愉悅度) -->
+                <div class="slider-section valence-section">
+                    <div class="slider-label">
+                        <span class="slider-label-text">🔴 愉悅度（Valence）🟢</span>
+                        <span class="slider-value" id="valence-value">0</span>
+                    </div>
+                    <div class="slider-track"></div>
+                    <input type="range" id="valence-slider" min="-100" max="100" value="0" 
+                           oninput="updateValence(this.value)">
+                    <div class="scale-markers">
+                        <span>很不愉悅</span>
+                        <span>中立</span>
+                        <span>非常愉悅</span>
+                    </div>
+                </div>
+
+                <!-- Arousal 滑桿 (能量水平) -->
+                <div class="slider-section arousal-section">
+                    <div class="slider-label">
+                        <span class="slider-label-text">😴 能量水平（Arousal）⚡</span>
+                        <span class="slider-value" id="arousal-value">0</span>
+                    </div>
+                    <div class="slider-track"></div>
+                    <input type="range" id="arousal-slider" min="-100" max="100" value="0" 
+                           oninput="updateArousal(this.value)">
+                    <div class="scale-markers">
+                        <span>非常疲憊</span>
+                        <span>中等</span>
+                        <span>高度活力</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 推薦花朵 -->
+        <div class="recommendations-section">
+            <h2 class="section-title">🌸 為你推薦的花</h2>
+            <p style="color: var(--text-light); margin-bottom: 1.5rem;">根據你的情緒，以下花朵最能代表你的心情：</p>
+
+            <div class="loading" id="loading">
+                <p>🌻 正在尋找最適合你的花...</p>
+            </div>
+
+            <div class="recommendations-grid" id="recommendations">
+                <!-- 推薦卡片將插入此處 -->
+            </div>
+
+            <!-- 行動按鈕 -->
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="proceedToDiary()">
+                    ✍️ 選擇此花並寫日記
+                </button>
+                <button class="btn btn-secondary" onclick="goBack()">
+                    ← 返回
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentValence = 0;
+        let currentArousal = 0;
+        let selectedFlowerId = null;
+        let recommender = null;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 檢查是否登入
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // 初始化推薦系統
+            if (typeof initialFlowers !== 'undefined') {
+                recommender = new EmotionRecommender(initialFlowers);
+                updateRecommendations();
+            }
+        });
+
+        function updateValence(value) {
+            currentValence = value / 100; // 轉換為 -1 到 1
+            document.getElementById('valence-value').textContent = value;
+            updateRecommendations();
+        }
+
+        function updateArousal(value) {
+            currentArousal = value / 100; // 轉換為 -1 到 1
+            document.getElementById('arousal-value').textContent = value;
+            updateRecommendations();
+        }
+
+        function selectQuadrant(quadrant) {
+            // 快速選擇象限
+            const quadrants = document.querySelectorAll('.quadrant');
+            quadrants.forEach(q => q.classList.remove('active'));
+            quadrants[quadrant - 1].classList.add('active');
+
+            // 設置滑桿
+            switch(quadrant) {
+                case 1: // Happy + Energetic
+                    document.getElementById('valence-slider').value = 75;
+                    document.getElementById('arousal-slider').value = 75;
+                    updateValence(75);
+                    updateArousal(75);
+                    break;
+                case 2: // Calm + Content
+                    document.getElementById('valence-slider').value = 50;
+                    document.getElementById('arousal-slider').value = -50;
+                    updateValence(50);
+                    updateArousal(-50);
+                    break;
+                case 3: // Sad + Tired
+                    document.getElementById('valence-slider').value = -60;
+                    document.getElementById('arousal-slider').value = -70;
+                    updateValence(-60);
+                    updateArousal(-70);
+                    break;
+                case 4: // Anxious + Energetic
+                    document.getElementById('valence-slider').value = -40;
+                    document.getElementById('arousal-slider').value = 70;
+                    updateValence(-40);
+                    updateArousal(70);
+                    break;
+            }
+        }
+
+        function updateRecommendations() {
+            if (!recommender) return;
+
+            // 獲取推薦花朵
+            const recommendations = recommender.recommendFlowersByDistance(
+                currentValence,
+                currentArousal,
+                5
+            );
+
+            // 渲染卡片
+            const container = document.getElementById('recommendations');
+            container.innerHTML = '';
+
+            recommendations.forEach(flower => {
+                const card = document.createElement('div');
+                card.className = 'flower-card';
+                if (flower.id === selectedFlowerId) {
+                    card.classList.add('selected');
+                }
+                
+                card.innerHTML = `
+                    <div class="flower-emoji" style="color: ${flower.color}">🌸</div>
+                    <div class="flower-name">${flower.name}</div>
+                    <div class="flower-chinese">${flower.chineseName}</div>
+                    <div class="flower-language">"${flower.language}"</div>
+                    <div class="flower-description">${flower.description}</div>
+                    <div class="match-score">契合度 ${flower.matchScore}%</div>
+                `;
+
+                card.onclick = function() {
+                    selectFlower(flower.id, card);
+                };
+
+                container.appendChild(card);
+            });
+        }
+
+        function selectFlower(flowerId, element) {
+            selectedFlowerId = flowerId;
+            document.querySelectorAll('.flower-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function proceedToDiary() {
+            if (!selectedFlowerId) {
+                alert('請先選擇一朵花來代表你的心情');
+                return;
+            }
+
+            // 儲存心情數據
+            const emotionData = {
+                selectedFlowerId: selectedFlowerId,
+                userValence: currentValence,
+                userArousal: currentArousal,
+                timestamp: new Date().toISOString()
+            };
+
+            localStorage.setItem('currentEmotion', JSON.stringify(emotionData));
+
+            // 前往日記編輯頁面
+            window.location.href = './diary-editor.html';
+        }
+
+        function goBack() {
+            window.location.href = './dashboard.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理員儀表板 - Flower Language</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-warm: #E6A15C;
+            --primary-brown: #966F46;
+            --bg-cream: #FDFBF7;
+            --light-bg: #F5EBE6;
+            --text-dark: #4A3728;
+            --text-light: #7A6B60;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #F9F3EB 100%);
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #6B4C41 0%, #4A3728 100%);
+            color: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .nav-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 2px solid var(--light-bg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-card:hover {
+            border-color: var(--primary-warm);
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(230, 161, 92, 0.15);
+        }
+
+        .nav-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .nav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--primary-brown);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .nav-description {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .content-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 3rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-brown);
+            margin-bottom: 1.5rem;
+        }
+
+        .management-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light-bg);
+            border-radius: 10px;
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-warm);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(230, 161, 92, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(230, 161, 92, 0.1) 0%, rgba(212, 165, 116, 0.1) 100%);
+            border: 2px solid var(--light-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--primary-warm);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(230, 161, 92, 0.3);
+        }
+
+        .logout-btn {
+            background: #FF6B6B;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+        }
+
+        .logout-btn:hover {
+            background: #FF5252;
+        }
+
+        @media (max-width: 768px) {
+            .admin-nav {
+                grid-template-columns: 1fr;
+            }
+
+            .header-title {
+                font-size: 1.5rem;
+            }
+
+            .logout-btn {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 1rem;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 登出按鈕 -->
+    <button class="logout-btn" onclick="logout()">登出</button>
+
+    <!-- 管理員標題 -->
+    <div class="admin-header">
+        <h1 class="header-title">🛡️ 管理員控制中心</h1>
+        <p style="opacity: 0.9;">管理花語系統的所有核心功能</p>
+    </div>
+
+    <!-- 導航卡片 -->
+    <div class="admin-nav">
+        <div class="nav-card" onclick="switchSection('statistics')">
+            <div class="nav-icon">📊</div>
+            <div class="nav-title">數據統計</div>
+            <div class="nav-description">查看平台整體統計與用戶趨勢</div>
+        </div>
+        <div class="nav-card" onclick="switchSection('flowers')">
+            <div class="nav-icon">🌺</div>
+            <div class="nav-title">花卉管理</div>
+            <div class="nav-description">新增、編輯或刪除花卉數據</div>
+        </div>
+        <div class="nav-card" onclick="switchSection('shop')">
+            <div class="nav-icon">🛍️</div>
+            <div class="nav-title">商店管理</div>
+            <div class="nav-description">上架或下架商店商品</div>
+        </div>
+        <div class="nav-card" onclick="switchSection('moderation')">
+            <div class="nav-icon">🚨</div>
+            <div class="nav-title">內容審查</div>
+            <div class="nav-description">處理檢舉與違規內容</div>
+        </div>
+    </div>
+
+    <!-- 數據統計區段 -->
+    <div class="content-section" id="section-statistics" style="display: none;">
+        <h2 class="section-title">📊 平台數據統計</h2>
+        <div class="management-panel">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">1,247</div>
+                    <div class="stat-label">活躍用戶</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8,394</div>
+                    <div class="stat-label">日記數量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12.3K</div>
+                    <div class="stat-label">社群互動</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4.8/5</div>
+                    <div class="stat-label">用戶評分</div>
+                </div>
+            </div>
+            <p style="color: var(--text-light); font-size: 0.9rem;">
+                💡 提示：實際數據應連接到後端數據庫進行即時統計
+            </p>
+        </div>
+    </div>
+
+    <!-- 花卉管理區段 -->
+    <div class="content-section" id="section-flowers" style="display: none;">
+        <h2 class="section-title">🌺 花卉管理系統</h2>
+        <div class="management-panel">
+            <h3 style="margin-bottom: 1rem;">新增花卉</h3>
+            <form onsubmit="addFlower(event)">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">英文花名</label>
+                        <input type="text" class="form-input" placeholder="e.g., Sunflower" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">中文花名</label>
+                        <input type="text" class="form-input" placeholder="e.g., 向日葵" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">花語寓意</label>
+                        <input type="text" class="form-input" placeholder="e.g., 快樂、忠誠、長壽" required>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">愉悅度 (Valence) -1 到 1</label>
+                        <input type="number" class="form-input" min="-1" max="1" step="0.1" placeholder="0.8" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">能量水平 (Arousal) -1 到 1</label>
+                        <input type="number" class="form-input" min="-1" max="1" step="0.1" placeholder="0.7" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">花卉描述</label>
+                    <textarea class="form-textarea" placeholder="輸入花卉的詳細描述..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">✅ 新增花卉</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 商店管理區段 -->
+    <div class="content-section" id="section-shop" style="display: none;">
+        <h2 class="section-title">🛍️ 虛擬商店管理</h2>
+        <div class="management-panel">
+            <h3 style="margin-bottom: 1rem;">上架新商品</h3>
+            <form onsubmit="addShopItem(event)">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">商品名稱</label>
+                        <input type="text" class="form-input" placeholder="e.g., 晨曦落葉背景" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">商品分類</label>
+                        <select class="form-input" required>
+                            <option>選擇分類</option>
+                            <option>BACKGROUND</option>
+                            <option>STICKER</option>
+                            <option>BGM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">點數定價</label>
+                        <input type="number" class="form-input" min="0" placeholder="200" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">商品描述</label>
+                    <textarea class="form-textarea" placeholder="輸入商品描述..." required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox">
+                        <span>限時商品</span>
+                    </label>
+                </div>
+                <button type="submit" class="submit-btn" style="margin-top: 1rem;">✅ 上架商品</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 內容審查區段 -->
+    <div class="content-section" id="section-moderation" style="display: none;">
+        <h2 class="section-title">🚨 社群內容審查</h2>
+        <div class="management-panel">
+            <h3 style="margin-bottom: 1rem;">待審核內容</h3>
+            <div style="padding: 2rem; text-align: center; color: var(--text-light);">
+                <p>目前沒有待審核的內容</p>
+                <p style="font-size: 0.9rem;">當有用戶檢舉達 3 次的貼文將自動進入審查佇列</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user || user.role !== 'admin') {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // 顯示統計數據
+            switchSection('statistics');
+        });
+
+        function switchSection(section) {
+            // 隱藏所有區段
+            document.querySelectorAll('[id^="section-"]').forEach(el => {
+                el.style.display = 'none';
+            });
+
+            // 顯示選定區段
+            const sectionEl = document.getElementById(`section-${section}`);
+            if (sectionEl) {
+                sectionEl.style.display = 'block';
+                sectionEl.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function addFlower(e) {
+            e.preventDefault();
+            alert('✅ 花卉已添加！\n\n提示：實際應將數據發送到後端 API');
+            e.target.reset();
+        }
+
+        function addShopItem(e) {
+            e.preventDefault();
+            alert('✅ 商品已上架！\n\n提示：實際應將數據發送到後端 API');
+            e.target.reset();
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = '../index.html';
+        }
+    </script>
+</body>
+</html>

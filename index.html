@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Language 花語心情 - 療癒你的每一天</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Playfair+Display:wght@700;800&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 療癒系暖色 */
+            --primary-warm: #E6A15C;       /* 暖橘 */
+            --primary-brown: #966F46;      /* 牛奶茶棕 */
+            --bg-cream: #FDFBF7;           /* 奶油白 */
+            --accent-tan: #D4A574;         /* 淡棕 */
+            --light-bg: #F5EBE6;           /* 淺麥色 */
+            --text-dark: #4A3728;          /* 深棕 */
+            --text-light: #7A6B60;         /* 淡棕 */
+            --shadow-soft: rgba(102, 85, 68, 0.08);
+            --shadow-medium: rgba(102, 85, 68, 0.15);
+            
+            /* 字型 */
+            --font-display: 'Playfair Display', serif;
+            --font-serif: 'Noto Serif TC', serif;
+            --font-body: 'Lora', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            font-family: var(--font-body);
+            line-height: 1.8;
+        }
+
+        /* ========== 背景紙張紋理 ========== */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, 0.02) 0px,
+                    transparent 1px,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.02) 3px
+                );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ========== 登陸頁面 ========== */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #F9F3EB 100%);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            box-shadow: 
+                0 20px 60px var(--shadow-medium),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+            animation: slideUpFade 0.8s ease-out;
+        }
+
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .flower-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: floatGently 3s ease-in-out infinite;
+        }
+
+        @keyframes floatGently {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .site-title {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            color: var(--primary-warm);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .site-subtitle {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        /* ========== 表單 ========== */
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            gap: 0;
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 0.25rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-light);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary-warm);
+            box-shadow: 0 4px 12px var(--shadow-soft);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 2px solid var(--light-bg);
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: var(--bg-cream);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-warm);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(230, 161, 92, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(230, 161, 92, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(230, 161, 92, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .info-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* ========== 演示帳號提示 ========== */
+        .demo-notice {
+            background: linear-gradient(135deg, rgba(230, 161, 92, 0.1) 0%, rgba(212, 165, 116, 0.1) 100%);
+            border-left: 4px solid var(--primary-warm);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .demo-notice strong {
+            color: var(--primary-warm);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-creds {
+            font-family: 'Courier New', monospace;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+            line-height: 1.6;
+            font-size: 0.85rem;
+        }
+
+        /* ========== 響應式設計 ========== */
+        @media (max-width: 600px) {
+            .login-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .site-title {
+                font-size: 2rem;
+            }
+
+            .form-input, .submit-btn {
+                font-size: 16px; /* 防止 iOS 自動放大 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-content">
+        <div class="login-container">
+            <div class="login-card">
+                <!-- 標誌區塊 -->
+                <div class="logo-section">
+                    <div class="flower-icon">🌸</div>
+                    <h1 class="site-title">Flower Language</h1>
+                    <p class="site-subtitle">用花語記錄你的心情</p>
+                </div>
+
+                <!-- 演示帳號提示 -->
+                <div class="demo-notice">
+                    <strong>🎯 快速試用</strong>
+                    <div class="demo-creds">
+                        一般使用者：user123 / password123<br>
+                        管理員：admin001 / adminPass123
+                    </div>
+                </div>
+
+                <!-- 認證頁籤 -->
+                <div class="auth-tabs">
+                    <button class="tab-btn active" onclick="switchTab('login')">登入</button>
+                    <button class="tab-btn" onclick="switchTab('register')">註冊</button>
+                    <button class="tab-btn" onclick="switchTab('admin-login')">管理員</button>
+                </div>
+
+                <!-- 登入表單 -->
+                <div id="login" class="tab-content active">
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label class="form-label">用戶名稱</label>
+                            <input type="text" class="form-input" id="login-username" placeholder="輸入用戶名稱" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">密碼</label>
+                            <input type="password" class="form-input" id="login-password" placeholder="輸入密碼" required>
+                        </div>
+                        <button type="submit" class="submit-btn">登入</button>
+                        <p class="info-text">新用戶？在上方選擇「註冊」創建帳號</p>
+                    </form>
+                </div>
+
+                <!-- 註冊表單 -->
+                <div id="register" class="tab-content">
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label class="form-label">用戶名稱</label>
+                            <input type="text" class="form-input" id="register-username" placeholder="選擇一個用戶名稱" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">電子郵件</label>
+                            <input type="email" class="form-input" id="register-email" placeholder="輸入電子郵件" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">密碼</label>
+                            <input type="password" class="form-input" id="register-password" placeholder="至少 6 個字元" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">確認密碼</label>
+                            <input type="password" class="form-input" id="register-password-confirm" placeholder="再次輸入密碼" required>
+                        </div>
+                        <button type="submit" class="submit-btn">創建帳號</button>
+                        <p class="info-text">已有帳號？選擇「登入」即可</p>
+                    </form>
+                </div>
+
+                <!-- 管理員登入 -->
+                <div id="admin-login" class="tab-content">
+                    <form onsubmit="handleAdminLogin(event)">
+                        <div class="form-group">
+                            <label class="form-label">管理員用戶名稱</label>
+                            <input type="text" class="form-input" id="admin-username" placeholder="輸入管理員用戶名稱" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">管理員密碼</label>
+                            <input type="password" class="form-input" id="admin-password" placeholder="輸入管理員密碼" required>
+                        </div>
+                        <button type="submit" class="submit-btn">管理員登入</button>
+                        <p class="info-text">僅限授權管理員使用</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 簡單的本地儲存認證（前端演示）
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            // 演示帳號驗證
+            if (username === 'user123' && password === 'password123') {
+                localStorage.setItem('currentUser', JSON.stringify({
+                    userId: 'user001',
+                    username: username,
+                    role: 'user',
+                    loginTime: new Date().toISOString()
+                }));
+                window.location.href = './dashboard.html';
+            } else {
+                alert('❌ 用戶名稱或密碼錯誤\n\n試用帳號：\n用戶名稱：user123\n密碼：password123');
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-password-confirm').value;
+
+            if (password !== confirm) {
+                alert('❌ 密碼不相符');
+                return;
+            }
+
+            // 模擬註冊（實際應連接後端）
+            localStorage.setItem('currentUser', JSON.stringify({
+                userId: 'user' + Date.now(),
+                username: username,
+                email: email,
+                role: 'user',
+                totalPoints: 0,
+                totalDiaries: 0,
+                loginTime: new Date().toISOString()
+            }));
+            
+            alert('✅ 帳號已創建！即將進入平台...');
+            window.location.href = './dashboard.html';
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+
+            if (username === 'admin001' && password === 'adminPass123') {
+                localStorage.setItem('currentUser', JSON.stringify({
+                    adminId: 'admin001',
+                    username: username,
+                    role: 'admin',
+                    permissions: ['MANAGE_FLOWERS', 'MANAGE_SHOP', 'REVIEW_POSTS', 'VIEW_ANALYTICS'],
+                    loginTime: new Date().toISOString()
+                }));
+                window.location.href = './admin/dashboard.html';
+            } else {
+                alert('❌ 管理員用戶名稱或密碼錯誤\n\n試用帳號：\n用戶名稱：admin001\n密碼：adminPass123');
+            }
+        }
+    </script>
+</body>
+</html>

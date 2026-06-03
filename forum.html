@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>匿名廣場 - Flower Language</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="../data/schema.js"></script>
+    <style>
+        :root {
+            --primary-warm: #E6A15C;
+            --primary-brown: #966F46;
+            --bg-cream: #FDFBF7;
+            --light-bg: #F5EBE6;
+            --text-dark: #4A3728;
+            --text-light: #7A6B60;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #F9F3EB 100%);
+            padding: 2rem 0;
+        }
+
+        .forum-header {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .forum-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .forum-subtitle {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .forum-info {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+        }
+
+        .forum-description {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .privacy-badge {
+            background: linear-gradient(135deg, rgba(110, 203, 99, 0.2) 0%, rgba(150, 180, 130, 0.2) 100%);
+            color: #4A7C4E;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            border-left: 4px solid #6ECB63;
+            font-size: 0.9rem;
+        }
+
+        .posts-section {
+            margin-bottom: 3rem;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(230, 161, 92, 0.15);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .post-author {
+            flex-grow: 1;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: var(--primary-brown);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .author-flower {
+            font-size: 1.2rem;
+        }
+
+        .post-time {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .post-content {
+            color: var(--text-dark);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-bg);
+        }
+
+        .reaction-btn {
+            background: white;
+            border: 2px solid var(--light-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .reaction-btn:hover {
+            border-color: var(--primary-warm);
+            background: rgba(230, 161, 92, 0.1);
+        }
+
+        .reaction-btn.active {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            border-color: var(--primary-warm);
+        }
+
+        .report-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .report-btn:hover {
+            color: #FF6B6B;
+        }
+
+        .no-posts {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-light);
+        }
+
+        .no-posts-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-note {
+            background: linear-gradient(135deg, rgba(230, 161, 92, 0.1) 0%, rgba(212, 165, 116, 0.1) 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            color: var(--text-light);
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .forum-title {
+                font-size: 2rem;
+            }
+
+            .post-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .post-actions {
+                flex-direction: column;
+            }
+
+            .reaction-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 廣場標題 -->
+    <div class="forum-header">
+        <h1 class="forum-title">💬 匿名廣場</h1>
+        <p class="forum-subtitle">一個安全、溫暖的心靈共鳴空間</p>
+    </div>
+
+    <div class="container">
+        <!-- 廣場說明 -->
+        <div class="forum-info">
+            <p class="forum-description">
+                在這裡，你可以匿名分享你的故事、感受與想法。每個聲音都很重要，每份感受都值得被傾聽。
+                所有互動都充滿溫暖與尊重，我們拒絕評判，只有深深的同感與支持。
+            </p>
+            <div class="privacy-badge">
+                🔐 隱私保護：你的真實身份已被完全隱藏。系統會將你的用戶名轉換為「花朵名稱 + 隨機編號」。
+                例如：「暗戀的向日葵 #083」
+            </div>
+        </div>
+
+        <!-- 貼文區域 -->
+        <div class="posts-section" id="posts-container">
+            <!-- 貼文將插入此處 -->
+        </div>
+
+        <!-- 空狀態提示 -->
+        <div class="no-posts" id="no-posts">
+            <div class="no-posts-icon">🌸</div>
+            <h3>還沒有人分享故事</h3>
+            <p>成為第一位分享的人，或者邀請朋友來聊天吧</p>
+            <div class="empty-note">
+                💭 小提示：當你發布日記時，可以選擇「分享到廣場」，
+                你的故事（保持匿名）將出現在這裡，
+                讓其他人看到你的心聲，也許會互相療癒。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allPosts = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // 從本地儲存加載貼文
+            const savedPosts = JSON.parse(localStorage.getItem('forumPosts') || '[]');
+            if (savedPosts.length > 0) {
+                displayPosts(savedPosts);
+            } else {
+                // 顯示示例貼文
+                loadSamplePosts();
+            }
+        });
+
+        function loadSamplePosts() {
+            // 示例貼文（實際應從後端加載）
+            const samplePosts = [
+                {
+                    id: 'post001',
+                    author: '靜謐的薰衣草 #247',
+                    flower: '🪻',
+                    content: '今天是難過的一天，但看著窗外的花朵，我感到一絲寧靜。謝謝大家的陪伴。',
+                    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toLocaleString('zh-Hant-TW'),
+                    reactions: { hug: 12, flower: 8, empathy: 5 }
+                },
+                {
+                    id: 'post002',
+                    author: '勇敢的向日葵 #512',
+                    flower: '🌻',
+                    content: '我決定要改變自己。雖然還有很長的路要走，但我已經踏出了第一步。相信自己！',
+                    timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toLocaleString('zh-Hant-TW'),
+                    reactions: { hug: 24, flower: 18, empathy: 9 }
+                },
+                {
+                    id: 'post003',
+                    author: '感恩的玫瑰 #089',
+                    flower: '🌹',
+                    content: '感謝所有在我生命中出現的人。每一份愛，每一句問候，都讓我感到生活的意義。',
+                    timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toLocaleString('zh-Hant-TW'),
+                    reactions: { hug: 31, flower: 22, empathy: 14 }
+                }
+            ];
+
+            allPosts = samplePosts;
+            displayPosts(samplePosts);
+        }
+
+        function displayPosts(posts) {
+            const container = document.getElementById('posts-container');
+            const noPostsEl = document.getElementById('no-posts');
+
+            if (posts.length === 0) {
+                container.innerHTML = '';
+                noPostsEl.style.display = 'block';
+                return;
+            }
+
+            noPostsEl.style.display = 'none';
+
+            container.innerHTML = posts.map((post, index) => `
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="post-author">
+                            <div class="author-name">
+                                <span class="author-flower">${post.flower}</span>
+                                <span>${post.author}</span>
+                            </div>
+                            <div class="post-time">${post.timestamp}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    <div class="post-actions">
+                        <button class="reaction-btn" onclick="addReaction(${index}, 'hug')">
+                            🫂 擁抱 <span>(${post.reactions?.hug || 0})</span>
+                        </button>
+                        <button class="reaction-btn" onclick="addReaction(${index}, 'flower')">
+                            🌸 送花 <span>(${post.reactions?.flower || 0})</span>
+                        </button>
+                        <button class="reaction-btn" onclick="addReaction(${index}, 'empathy')">
+                            ❤️ 感同身受 <span>(${post.reactions?.empathy || 0})</span>
+                        </button>
+                        <button class="report-btn" onclick="reportPost(${index})">
+                            ⚠️ 檢舉
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addReaction(postIndex, reactionType) {
+            const post = allPosts[postIndex];
+            if (!post.reactions) {
+                post.reactions = { hug: 0, flower: 0, empathy: 0 };
+            }
+            post.reactions[reactionType] = (post.reactions[reactionType] || 0) + 1;
+
+            // 更新顯示
+            displayPosts(allPosts);
+
+            // 保存
+            localStorage.setItem('forumPosts', JSON.stringify(allPosts));
+        }
+
+        function reportPost(postIndex) {
+            const post = allPosts[postIndex];
+            post.flaggedCount = (post.flaggedCount || 0) + 1;
+
+            if (post.flaggedCount >= 3) {
+                alert('✓ 感謝你的檢舉。該貼文已被標記，管理員將進行審查。');
+                // 實際應該將貼文移至審查佇列
+            } else {
+                alert(`✓ 感謝你的檢舉。需要 ${3 - post.flaggedCount} 個檢舉才能提交審查。`);
+            }
+
+            localStorage.setItem('forumPosts', JSON.stringify(allPosts));
+        }
+    </script>
+</body>
+</html>

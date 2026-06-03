@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虛擬商店 - Flower Language</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="../data/schema.js"></script>
+    <style>
+        :root {
+            --primary-warm: #E6A15C;
+            --primary-brown: #966F46;
+            --bg-cream: #FDFBF7;
+            --light-bg: #F5EBE6;
+            --text-dark: #4A3728;
+            --text-light: #7A6B60;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #F9F3EB 100%);
+            padding: 2rem 0;
+        }
+
+        .shop-header {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .shop-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .shop-subtitle {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .wallet-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .points-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .points-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary-warm);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            background: white;
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+        }
+
+        .filter-tab {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid transparent;
+            background: var(--light-bg);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--primary-warm);
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            border-color: var(--primary-warm);
+        }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .item-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 2px solid rgba(230, 161, 92, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 32px rgba(230, 161, 92, 0.15);
+            border-color: var(--primary-warm);
+        }
+
+        .item-preview {
+            height: 150px;
+            background: linear-gradient(135deg, #F5EBE6 0%, #FFE8CC 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-preview.limited::after {
+            content: '限時';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .item-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--primary-brown);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .item-description {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            flex-grow: 1;
+            line-height: 1.5;
+        }
+
+        .item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-bg);
+        }
+
+        .item-price {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--primary-warm);
+            font-weight: 600;
+        }
+
+        .item-btn {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .item-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(230, 161, 92, 0.3);
+        }
+
+        .item-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .item-btn.owned {
+            background: var(--light-bg);
+            color: var(--text-light);
+            cursor: default;
+        }
+
+        .cart-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+        }
+
+        .cart-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary-brown);
+            margin-bottom: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--light-bg);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .cart-item-price {
+            color: var(--primary-warm);
+            font-weight: 600;
+        }
+
+        .remove-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0.3rem 0.6rem;
+            transition: color 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            color: #FF6B6B;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        .checkout-btn {
+            background: linear-gradient(135deg, #6ECB63 0%, #5AB95A 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(110, 203, 99, 0.3);
+        }
+
+        .checkout-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .shop-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+
+            .wallet-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .shop-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 商店標題 -->
+    <div class="shop-header">
+        <h1 class="shop-title">🛍️ 虛擬商店</h1>
+        <p class="shop-subtitle">用花朵點數裝飾你的日記與心靈</p>
+    </div>
+
+    <div class="container">
+        <!-- 錢包區塊 -->
+        <div class="wallet-section">
+            <div class="points-display">
+                <span>🌺 你的花朵點數</span>
+            </div>
+            <div class="points-number" id="current-points">0</div>
+            <div style="font-size: 0.9rem; color: var(--text-light);">
+                每天首次記錄心情 +50 點 | 給他人溫暖回應 +5 點
+            </div>
+        </div>
+
+        <!-- 分類篩選 -->
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="filterItems('all')">全部</button>
+            <button class="filter-tab" onclick="filterItems('BACKGROUND')">日記本背景</button>
+            <button class="filter-tab" onclick="filterItems('STICKER')">裝飾貼紙</button>
+            <button class="filter-tab" onclick="filterItems('BGM')">背景音樂</button>
+        </div>
+
+        <!-- 商品網格 -->
+        <div class="shop-grid" id="shop-grid">
+            <!-- 商品卡片將插入此處 -->
+        </div>
+
+        <!-- 購物車 -->
+        <div class="cart-section">
+            <h2 class="cart-title">🛒 我的購物車</h2>
+            <div id="cart-items">
+                <div class="empty-cart">購物車是空的</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--light-bg);">
+                <span style="font-size: 1.1rem; font-weight: 600;">合計</span>
+                <span style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--primary-warm); font-weight: 600;" id="total-price">0</span>
+            </div>
+            <button class="checkout-btn" id="checkout-btn" onclick="checkout()">確認購買</button>
+        </div>
+    </div>
+
+    <script>
+        let allItems = [];
+        let cart = [];
+        let currentFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            document.getElementById('current-points').textContent = user.totalPoints || 0;
+
+            if (typeof initialShopItems !== 'undefined') {
+                allItems = initialShopItems;
+                displayItems(allItems);
+            }
+        });
+
+        function displayItems(items) {
+            const grid = document.getElementById('shop-grid');
+            grid.innerHTML = items.map(item => `
+                <div class="item-card">
+                    <div class="item-preview ${item.isLimited ? 'limited' : ''}" 
+                         style="background: ${item.previewColor || 'linear-gradient(135deg, #F5EBE6 0%, #FFE8CC 100%)'}">
+                        ${getItemEmoji(item.category)}
+                    </div>
+                    <div class="item-body">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-description">${item.description}</div>
+                    </div>
+                    <div class="item-footer">
+                        <div class="item-price">
+                            <span>🌺</span>
+                            <span>${item.cost}</span>
+                        </div>
+                        <button class="item-btn" onclick="addToCart('${item.id}')">
+                            ${item.cost === 0 ? '已擁有' : '加入購物車'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getItemEmoji(category) {
+            const emojis = {
+                'BACKGROUND': '🎨',
+                'STICKER': '✨',
+                'BGM': '🎵',
+                'FRAME': '🖼️',
+                'OTHER': '🎁'
+            };
+            return emojis[category] || '🛍️';
+        }
+
+        function filterItems(category) {
+            currentFilter = category;
+            
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            const filtered = category === 'all' 
+                ? allItems 
+                : allItems.filter(item => item.category === category);
+            
+            displayItems(filtered);
+        }
+
+        function addToCart(itemId) {
+            const item = allItems.find(i => i.id === itemId);
+            if (!item) return;
+
+            // 檢查是否已在購物車
+            const existingItem = cart.find(c => c.id === itemId);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    ...item,
+                    quantity: 1
+                });
+            }
+
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItemsEl = document.getElementById('cart-items');
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            const userPoints = user.totalPoints || 0;
+
+            if (cart.length === 0) {
+                cartItemsEl.innerHTML = '<div class="empty-cart">購物車是空的</div>';
+                document.getElementById('total-price').textContent = '0';
+                return;
+            }
+
+            cartItemsEl.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div>
+                        <div class="cart-item-name">${item.name}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">數量: ${item.quantity}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span class="cart-item-price">${item.cost * item.quantity}</span>
+                        <button class="remove-btn" onclick="removeFromCart('${item.id}')">✕</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.cost * item.quantity), 0);
+            document.getElementById('total-price').textContent = total;
+
+            // 更新結帳按鈕狀態
+            const checkoutBtn = document.getElementById('checkout-btn');
+            if (total > userPoints) {
+                checkoutBtn.disabled = true;
+                checkoutBtn.textContent = `點數不足 (需要 ${total} 點)`;
+            } else {
+                checkoutBtn.disabled = false;
+                checkoutBtn.textContent = '確認購買';
+            }
+        }
+
+        function removeFromCart(itemId) {
+            const index = cart.findIndex(item => item.id === itemId);
+            if (index > -1) {
+                cart.splice(index, 1);
+                updateCart();
+            }
+        }
+
+        function checkout() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            const total = cart.reduce((sum, item) => sum + (item.cost * item.quantity), 0);
+
+            if (total > user.totalPoints) {
+                alert('點數不足');
+                return;
+            }
+
+            // 扣除點數
+            user.totalPoints -= total;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+
+            // 記錄購買
+            let purchases = JSON.parse(localStorage.getItem('userPurchases') || '[]');
+            cart.forEach(item => {
+                purchases.push({
+                    itemId: item.id,
+                    itemName: item.name,
+                    cost: item.cost,
+                    quantity: item.quantity,
+                    purchasedAt: new Date().toISOString()
+                });
+            });
+            localStorage.setItem('userPurchases', JSON.stringify(purchases));
+
+            // 清空購物車並更新顯示
+            cart = [];
+            alert('✅ 購買成功！感謝你的支持');
+            document.getElementById('current-points').textContent = user.totalPoints;
+            updateCart();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>花語圖鑑 - Flower Language</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="../data/schema.js"></script>
+    <style>
+        :root {
+            --primary-warm: #E6A15C;
+            --primary-brown: #966F46;
+            --bg-cream: #FDFBF7;
+            --light-bg: #F5EBE6;
+            --text-dark: #4A3728;
+            --text-light: #7A6B60;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #F9F3EB 100%);
+            padding: 2rem 0;
+        }
+
+        .guide-header {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .guide-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .guide-subtitle {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .container-full {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .filter-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+        }
+
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .filter-input {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light-bg);
+            border-radius: 10px;
+            font-family: 'Lora', serif;
+            transition: all 0.3s ease;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--primary-warm);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(230, 161, 92, 0.1);
+        }
+
+        .flower-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .flower-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--light-bg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(102, 85, 68, 0.08);
+        }
+
+        .flower-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-warm);
+            box-shadow: 0 16px 32px rgba(230, 161, 92, 0.15);
+        }
+
+        .flower-emoji {
+            font-size: 3.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .flower-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--primary-brown);
+            margin-bottom: 0.3rem;
+            font-weight: 700;
+        }
+
+        .flower-chinese {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .flower-language {
+            color: var(--primary-warm);
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .flower-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, rgba(230, 161, 92, 0.2) 0%, rgba(212, 165, 116, 0.2) 100%);
+            color: var(--primary-brown);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .flower-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 0;
+            border-top: 1px solid var(--light-bg);
+            margin-top: 1rem;
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--primary-warm);
+            font-weight: 600;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(40px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-light);
+            border: none;
+            background: none;
+            padding: 0;
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .modal-close:hover {
+            color: var(--primary-warm);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary-brown);
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .modal-body {
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        .modal-body p {
+            margin-bottom: 1rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-light);
+        }
+
+        .no-results-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .flower-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 1rem;
+            }
+
+            .filter-group {
+                grid-template-columns: 1fr;
+            }
+
+            .guide-title {
+                font-size: 1.8rem;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 標題 -->
+    <div class="guide-header">
+        <h1 class="guide-title">🌸 花語圖鑑</h1>
+        <p class="guide-subtitle">探索 50+ 種花卉與它們的心靈寓意</p>
+    </div>
+
+    <div class="container-full">
+        <!-- 篩選器 -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <div class="filter-item">
+                    <label class="filter-label">🔍 搜尋花名或花語</label>
+                    <input type="text" class="filter-input" id="search-input" 
+                           placeholder="輸入花名或情緒關鍵字..." 
+                           oninput="filterFlowers()">
+                </div>
+                <div class="filter-item">
+                    <label class="filter-label">🎨 按情緒象限篩選</label>
+                    <select class="filter-input" id="quadrant-filter" onchange="filterFlowers()">
+                        <option value="">全部情緒</option>
+                        <option value="Q1">開心 + 活力 😄</option>
+                        <option value="Q2">平靜 + 滿足 😊</option>
+                        <option value="Q3">難過 + 疲憊 😔</option>
+                        <option value="Q4">焦慮 + 活力 😠</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label class="filter-label">🏷️ 按標籤篩選</label>
+                    <select class="filter-input" id="tag-filter" onchange="filterFlowers()">
+                        <option value="">全部標籤</option>
+                        <option value="peaceful">平靜</option>
+                        <option value="happy">開心</option>
+                        <option value="calm">放鬆</option>
+                        <option value="sad">難過</option>
+                        <option value="energetic">活力</option>
+                        <option value="loving">愛</option>
+                        <option value="brave">勇敢</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 花卉網格 -->
+        <div class="flower-grid" id="flower-grid">
+            <!-- 花卉卡片將插入此處 -->
+        </div>
+
+        <div class="no-results" id="no-results" style="display: none;">
+            <div class="no-results-icon">🔍</div>
+            <h3>找不到符合的花朵</h3>
+            <p>請嘗試不同的搜尋關鍵字或篩選條件</p>
+        </div>
+    </div>
+
+    <!-- 詳情模態框 -->
+    <div class="modal" id="flower-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        let allFlowers = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            if (typeof initialFlowers !== 'undefined') {
+                allFlowers = initialFlowers;
+                displayFlowers(allFlowers);
+            }
+        });
+
+        function displayFlowers(flowers) {
+            const grid = document.getElementById('flower-grid');
+            const noResults = document.getElementById('no-results');
+
+            if (flowers.length === 0) {
+                grid.innerHTML = '';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            noResults.style.display = 'none';
+            grid.innerHTML = flowers.map(flower => `
+                <div class="flower-card" onclick="openModal('${flower.id}')">
+                    <div class="flower-emoji">🌸</div>
+                    <div class="flower-name">${flower.name}</div>
+                    <div class="flower-chinese">${flower.chineseName}</div>
+                    <div class="flower-language">"${flower.language}"</div>
+                    <div class="flower-tags">
+                        ${(flower.tags || []).slice(0, 2).map(tag => 
+                            `<span class="tag">${tag}</span>`
+                        ).join('')}
+                    </div>
+                    <div class="flower-stats">
+                        <div class="stat">
+                            <div>愉悅度</div>
+                            <div class="stat-value">${(flower.valence * 100).toFixed(0)}%</div>
+                        </div>
+                        <div class="stat">
+                            <div>能量</div>
+                            <div class="stat-value">${(flower.arousal * 100).toFixed(0)}%</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterFlowers() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const quadrant = document.getElementById('quadrant-filter').value;
+            const tag = document.getElementById('tag-filter').value;
+
+            let filtered = allFlowers.filter(flower => {
+                // 搜尋篩選
+                const matchesSearch = !searchTerm || 
+                    flower.name.toLowerCase().includes(searchTerm) ||
+                    flower.chineseName.includes(searchTerm) ||
+                    flower.language.toLowerCase().includes(searchTerm) ||
+                    flower.description.toLowerCase().includes(searchTerm);
+
+                if (!matchesSearch) return false;
+
+                // 象限篩選
+                if (quadrant) {
+                    const isPositive = flower.valence > 0;
+                    const isHighEnergy = flower.arousal > 0;
+                    let flowerQuadrant = '';
+
+                    if (isPositive && isHighEnergy) flowerQuadrant = 'Q1';
+                    else if (isPositive && !isHighEnergy) flowerQuadrant = 'Q2';
+                    else if (!isPositive && !isHighEnergy) flowerQuadrant = 'Q3';
+                    else if (!isPositive && isHighEnergy) flowerQuadrant = 'Q4';
+
+                    if (flowerQuadrant !== quadrant) return false;
+                }
+
+                // 標籤篩選
+                if (tag && (!flower.tags || !flower.tags.includes(tag))) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            displayFlowers(filtered);
+        }
+
+        function openModal(flowerId) {
+            const flower = allFlowers.find(f => f.id === flowerId);
+            if (!flower) return;
+
+            const modalBody = document.getElementById('modal-body');
+            const isPositive = flower.valence > 0;
+            const isHighEnergy = flower.arousal > 0;
+            let emotion = '';
+
+            if (isPositive && isHighEnergy) emotion = '開心 & 活力';
+            else if (isPositive && !isHighEnergy) emotion = '平靜 & 滿足';
+            else if (!isPositive && !isHighEnergy) emotion = '難過 & 疲憊';
+            else emotion = '焦慮 & 活力';
+
+            modalBody.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🌸</div>
+                    <h2 class="modal-title">${flower.name}</h2>
+                    <p style="color: var(--text-light); font-size: 1.1rem; margin-bottom: 1rem;">
+                        ${flower.chineseName}
+                    </p>
+                </div>
+                <div class="modal-body">
+                    <h4 style="color: var(--primary-warm); margin-bottom: 0.5rem;">🌿 花語寓意</h4>
+                    <p><strong>${flower.language}</strong></p>
+                    
+                    <h4 style="color: var(--primary-warm); margin: 1.5rem 0 0.5rem;">📖 花卉故事</h4>
+                    <p>${flower.description}</p>
+                    
+                    <h4 style="color: var(--primary-warm); margin: 1.5rem 0 0.5rem;">🌍 文化象徵</h4>
+                    <p>${flower.symbol}</p>
+                    
+                    <h4 style="color: var(--primary-warm); margin: 1.5rem 0 0.5rem;">💭 情緒特徵</h4>
+                    <p>
+                        <strong>情緒象限：</strong> ${emotion}<br>
+                        <strong>愉悅度：</strong> ${(flower.valence * 100).toFixed(0)}%<br>
+                        <strong>能量水平：</strong> ${(flower.arousal * 100).toFixed(0)}%
+                    </p>
+                    
+                    <h4 style="color: var(--primary-warm); margin: 1.5rem 0 0.5rem;">🏷️ 相關標籤</h4>
+                    <div class="flower-tags" style="justify-content: flex-start;">
+                        ${(flower.tags || []).map(tag => 
+                            `<span class="tag">${tag}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('flower-modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('flower-modal').classList.remove('show');
+        }
+
+        // 點擊背景關閉模態框
+        document.getElementById('flower-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

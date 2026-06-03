@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>撰寫日記 - Flower Language</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="../data/schema.js"></script>
+    <script src="../js/emotion-algorithm.js"></script>
+    <style>
+        :root {
+            --primary-warm: #E6A15C;
+            --primary-brown: #966F46;
+            --bg-cream: #FDFBF7;
+            --light-bg: #F5EBE6;
+            --text-dark: #4A3728;
+            --text-light: #7A6B60;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #F9F3EB 100%);
+            padding: 2rem;
+        }
+
+        .editor-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .editor-toolbar {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .toolbar-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary-brown);
+            flex: 1;
+        }
+
+        .toolbar-flower {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .flower-badge {
+            font-size: 1.5rem;
+        }
+
+        .background-selector {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .bg-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .bg-option:hover {
+            border-color: var(--primary-warm);
+            transform: scale(1.1);
+        }
+
+        .bg-option.active {
+            border-color: var(--primary-warm);
+            box-shadow: 0 0 8px rgba(230, 161, 92, 0.3);
+        }
+
+        /* 手帳頁面樣式 */
+        .notebook-editor {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 
+                0 20px 60px rgba(102, 85, 68, 0.15),
+                inset 0 -1px 3px rgba(102, 85, 68, 0.1);
+            border: 2px solid rgba(230, 161, 92, 0.2);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .notebook-page-style {
+            position: relative;
+            padding: 3rem;
+            min-height: 600px;
+            background: linear-gradient(to right,
+                var(--bg-cream) 0%,
+                var(--bg-cream) calc(100% - 1px),
+                var(--primary-brown) calc(100% - 1px),
+                var(--primary-brown) 100%
+            );
+            background-size: 100% 2rem;
+            background-position: 0 0;
+            background-repeat: repeat-y;
+        }
+
+        .notebook-page-style::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 50px;
+            background: linear-gradient(to right,
+                rgba(230, 161, 92, 0.1) 0%,
+                transparent 100%
+            );
+            pointer-events: none;
+        }
+
+        .page-metadata {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(230, 161, 92, 0.3);
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .page-date {
+            font-style: italic;
+        }
+
+        .page-flower-name {
+            color: var(--primary-warm);
+            font-weight: 600;
+        }
+
+        .page-title-input {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-brown);
+            border: none;
+            background: transparent;
+            width: 100%;
+            margin-bottom: 2rem;
+            padding: 0;
+            outline: none;
+            font-weight: 700;
+        }
+
+        .page-title-input::placeholder {
+            color: var(--text-light);
+        }
+
+        .page-content-textarea {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            color: var(--text-dark);
+            border: none;
+            background: transparent;
+            width: 100%;
+            min-height: 400px;
+            resize: none;
+            outline: none;
+            line-height: 2rem;
+        }
+
+        .page-content-textarea::placeholder {
+            color: var(--text-light);
+        }
+
+        /* 背景主題 */
+        .notebook-bg-maple-sugar {
+            background-color: #F5EBE6 !important;
+        }
+
+        .notebook-bg-dawn-maple {
+            background: linear-gradient(135deg, #F5EBE6 0%, #FFE8CC 100%) !important;
+        }
+
+        .notebook-bg-sunflower {
+            background: linear-gradient(135deg, #FFFACD 0%, #FFE4B5 100%) !important;
+        }
+
+        .notebook-bg-lavender {
+            background: linear-gradient(135deg, #F0E6FF 0%, #E6D9F2 100%) !important;
+        }
+
+        /* 編輯工具欄 */
+        .editing-tools {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(102, 85, 68, 0.1);
+            border: 1px solid rgba(230, 161, 92, 0.2);
+        }
+
+        .tools-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .sticker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 1rem;
+        }
+
+        .sticker-option {
+            padding: 1rem;
+            background: var(--light-bg);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+        }
+
+        .sticker-option:hover {
+            border-color: var(--primary-warm);
+            transform: scale(1.05);
+            background: rgba(230, 161, 92, 0.1);
+        }
+
+        /* 按鈕群組 */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(230, 161, 92, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(230, 161, 92, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-warm);
+            border: 2px solid var(--primary-warm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-bg);
+        }
+
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, rgba(110, 203, 99, 0.2) 0%, rgba(150, 180, 130, 0.2) 100%);
+            border-left: 4px solid #6ECB63;
+            color: #4A7C4E;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            animation: slideInUp 0.3s ease;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .notebook-page-style {
+                padding: 1.5rem;
+                min-height: 500px;
+            }
+
+            .editor-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .page-title-input {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <!-- 成功訊息 -->
+        <div class="success-message" id="success-message">
+            ✅ 日記已保存！你獲得了 50 點花朵點數
+        </div>
+
+        <!-- 編輯工具欄 -->
+        <div class="editor-toolbar">
+            <h2 class="toolbar-title">✍️ 寫下你的心情</h2>
+            <div class="toolbar-flower">
+                <span class="flower-badge" id="selected-flower-emoji">🌸</span>
+                <span id="selected-flower-name">選擇一朵花</span>
+            </div>
+            <div class="background-selector">
+                <span style="font-size: 0.85rem; color: var(--text-light);">背景：</span>
+                <div class="bg-option active" 
+                     style="background: #F5EBE6;" 
+                     onclick="changeBg(this, 'maple-sugar')" 
+                     title="楓糖燕麥"></div>
+                <div class="bg-option" 
+                     style="background: linear-gradient(135deg, #FFE8CC 0%, #FFD4A3 100%);" 
+                     onclick="changeBg(this, 'dawn-maple')" 
+                     title="晨曦落葉"></div>
+                <div class="bg-option" 
+                     style="background: linear-gradient(135deg, #FFFACD 0%, #FFE4B5 100%);" 
+                     onclick="changeBg(this, 'sunflower')" 
+                     title="午後向日葵"></div>
+                <div class="bg-option" 
+                     style="background: linear-gradient(135deg, #F0E6FF 0%, #E6D9F2 100%);" 
+                     onclick="changeBg(this, 'lavender')" 
+                     title="薰衣草夢境"></div>
+            </div>
+        </div>
+
+        <!-- 手帳頁面 -->
+        <div class="notebook-editor">
+            <div class="notebook-page-style notebook-bg-maple-sugar" id="notebook-page">
+                <div class="page-metadata">
+                    <span class="page-date" id="page-date"></span>
+                    <span class="page-flower-name" id="page-flower-label">今日代表花</span>
+                </div>
+                
+                <input type="text" 
+                       class="page-title-input" 
+                       id="diary-title" 
+                       placeholder="給你的日記起個標題...">
+                
+                <textarea class="page-content-textarea" 
+                          id="diary-content" 
+                          placeholder="在這裡寫下你的想法、感受與故事...讓花朵陪伴你度過這一天。"></textarea>
+            </div>
+        </div>
+
+        <!-- 裝飾貼紙工具 -->
+        <div class="editing-tools">
+            <div class="tools-title">✨ 裝飾你的日記</div>
+            <div class="sticker-grid">
+                <div class="sticker-option" onclick="insertSticker('🌸')">🌸</div>
+                <div class="sticker-option" onclick="insertSticker('🌺')">🌺</div>
+                <div class="sticker-option" onclick="insertSticker('🌼')">🌼</div>
+                <div class="sticker-option" onclick="insertSticker('🌻')">🌻</div>
+                <div class="sticker-option" onclick="insertSticker('🌷')">🌷</div>
+                <div class="sticker-option" onclick="insertSticker('🌹')">🌹</div>
+                <div class="sticker-option" onclick="insertSticker('✨')">✨</div>
+                <div class="sticker-option" onclick="insertSticker('💫')">💫</div>
+                <div class="sticker-option" onclick="insertSticker('💌')">💌</div>
+                <div class="sticker-option" onclick="insertSticker('🎀')">🎀</div>
+                <div class="sticker-option" onclick="insertSticker('🍃')">🍃</div>
+                <div class="sticker-option" onclick="insertSticker('🦋')">🦋</div>
+            </div>
+        </div>
+
+        <!-- 行動按鈕 -->
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="saveDiary()">
+                💾 保存日記
+            </button>
+            <button class="btn btn-secondary" onclick="goBack()">
+                ← 返回
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentFlower = null;
+        let currentBgClass = 'maple-sugar';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // 取得選定的情感與花朵
+            const emotionData = JSON.parse(localStorage.getItem('currentEmotion'));
+            if (emotionData && emotionData.selectedFlowerId) {
+                if (typeof initialFlowers !== 'undefined') {
+                    const flower = initialFlowers.find(f => f.id === emotionData.selectedFlowerId);
+                    if (flower) {
+                        currentFlower = flower;
+                        updateFlowerDisplay(flower);
+                    }
+                }
+            }
+
+            // 設置日期
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('zh-Hant-TW', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+            });
+            document.getElementById('page-date').textContent = `📅 ${dateStr}`;
+        });
+
+        function updateFlowerDisplay(flower) {
+            document.getElementById('selected-flower-emoji').textContent = '🌸';
+            document.getElementById('selected-flower-name').textContent = flower.chineseName;
+            document.getElementById('page-flower-label').textContent = `今日代表花：${flower.chineseName}`;
+        }
+
+        function changeBg(element, bgClass) {
+            // 移除其他選項的 active 類
+            document.querySelectorAll('.bg-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            element.classList.add('active');
+            
+            currentBgClass = bgClass;
+            
+            // 更新背景
+            const page = document.getElementById('notebook-page');
+            page.className = `notebook-page-style notebook-bg-${bgClass}`;
+        }
+
+        function insertSticker(emoji) {
+            const textarea = document.getElementById('diary-content');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            
+            textarea.value = text.substring(0, start) + emoji + text.substring(end);
+            textarea.focus();
+            textarea.setSelectionRange(start + emoji.length, start + emoji.length);
+        }
+
+        function saveDiary() {
+            const title = document.getElementById('diary-title').value || '無題';
+            const content = document.getElementById('diary-content').value;
+
+            if (!content.trim()) {
+                alert('請寫下你的日記內容');
+                return;
+            }
+
+            const diaryEntry = {
+                id: 'diary' + Date.now(),
+                title: title,
+                content: content,
+                flowerSelected: currentFlower?.id,
+                flowerName: currentFlower?.chineseName,
+                backgroundTheme: currentBgClass,
+                createdAt: new Date().toISOString(),
+                isPublished: false,
+                points: 50
+            };
+
+            // 保存到本地儲存（實際應保存到後端）
+            let diaries = JSON.parse(localStorage.getItem('userDiaries') || '[]');
+            diaries.push(diaryEntry);
+            localStorage.setItem('userDiaries', JSON.stringify(diaries));
+
+            // 更新用戶統計
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            user.totalDiaries = (user.totalDiaries || 0) + 1;
+            user.totalPoints = (user.totalPoints || 0) + 50;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+
+            // 顯示成功訊息
+            const msgEl = document.getElementById('success-message');
+            msgEl.classList.add('show');
+            
+            setTimeout(() => {
+                msgEl.classList.remove('show');
+                localStorage.removeItem('currentEmotion');
+                window.location.href = './dashboard.html';
+            }, 2000);
+        }
+
+        function goBack() {
+            window.location.href = './dashboard.html';
+        }
+    </script>
+</body>
+</html>
