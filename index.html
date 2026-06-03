@@ -23,31 +23,32 @@
         .login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         .login-box { background: white; border-radius: 20px; padding: 40px; width: 100%; max-width: 500px; box-shadow: 0 20px 60px rgba(102, 85, 68, 0.15); }
         .login-box h1 { text-align: center; color: var(--primary-warm); margin-bottom: 30px; font-size: 2.5rem; }
-        .tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 30px; }
+        .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
         .tab-btn { padding: 12px; border: 2px solid var(--light-bg); background: var(--light-bg); border-radius: 10px; cursor: pointer; font-weight: 600; color: var(--text-light); }
         .tab-btn.active { background: var(--primary-warm); color: white; }
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; }
-        input { width: 100%; padding: 12px; border: 2px solid var(--light-bg); border-radius: 10px; font-size: 16px; font-family: inherit; }
-        input:focus { outline: none; border-color: var(--primary-warm); }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid var(--light-bg); border-radius: 10px; font-size: 14px; font-family: inherit; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary-warm); }
         .submit-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; }
         .submit-btn:hover { transform: translateY(-2px); }
         .form-content { display: none; }
         .form-content.active { display: block; }
-        .demo-credentials { background: var(--light-bg); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; color: #4CAF50; font-weight: 600; }
+        .demo-credentials { background: var(--light-bg); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; color: #4CAF50; font-weight: 600; }
 
         /* APP */
         .main-content { display: none; padding-bottom: 150px; }
         .main-content.active { display: block; }
         .header { background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem; text-align: center; }
-        .header h1 { font-size: 2rem; }
+        .header h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
         .nav-tabs { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 2rem; }
-        .nav-tab { padding: 12px; background: white; border: 2px solid var(--light-bg); border-radius: 10px; cursor: pointer; font-weight: 600; color: var(--text-light); }
+        .nav-tab { padding: 12px; background: white; border: 2px solid var(--light-bg); border-radius: 10px; cursor: pointer; font-weight: 600; color: var(--text-light); transition: all 0.3s; }
         .nav-tab.active { background: var(--primary-warm); color: white; }
         .section { display: none; }
         .section.active { display: block; }
         .card { background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(102, 85, 68, 0.08); }
-        .card h2 { color: var(--primary-warm); margin-bottom: 1.5rem; }
+        .card h2 { color: var(--primary-warm); margin-bottom: 1.5rem; font-size: 1.5rem; }
+        .card h3 { color: var(--primary-brown); margin: 1.5rem 0 1rem; font-size: 1.1rem; }
 
         /* DIARY */
         .diary-container { display: grid; grid-template-columns: 1fr 350px; gap: 2rem; }
@@ -67,10 +68,24 @@
         .item-slot.locked { opacity: 0.6; cursor: not-allowed; }
         .item-slot.active { background: var(--primary-warm); color: white; }
 
+        /* ADMIN PAGES */
+        .form-section { background: var(--light-bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .item-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .item-card { background: white; border-radius: 12px; padding: 1.5rem; border: 2px solid var(--light-bg); }
+        .item-card h4 { color: var(--primary-warm); margin-bottom: 0.5rem; }
+        .item-card p { font-size: 0.9rem; color: var(--text-light); margin-bottom: 0.5rem; }
+        .action-buttons { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        .btn-edit, .btn-delete { padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+        .btn-edit { background: #FFD700; color: #333; }
+        .btn-delete { background: #FF6B6B; color: white; }
+        .btn-edit:hover { background: #FFC700; }
+        .btn-delete:hover { background: #FF5252; }
+
         /* SHOP */
         .flower-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
         .flower-card { background: white; border-radius: 15px; padding: 1.5rem; text-align: center; box-shadow: 0 4px 15px rgba(102, 85, 68, 0.08); }
-        .flower-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .flower-icon { font-size: 2.5rem; margin-bottom: 1rem; }
         .flower-card h3 { color: var(--primary-warm); margin-bottom: 0.5rem; }
         .buy-btn { background: var(--primary-warm); color: white; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 1rem; }
         .buy-btn:disabled { background: #4CAF50; }
@@ -82,13 +97,14 @@
 
         /* BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid var(--light-bg); padding: 0.8rem; display: flex; justify-content: center; gap: 0.5rem; z-index: 1000; }
-        .nav-btn { padding: 8px 12px; background: var(--light-bg); border: none; border-radius: 15px; cursor: pointer; font-weight: 600; }
+        .nav-btn { padding: 8px 12px; background: var(--light-bg); border: none; border-radius: 15px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
         .nav-btn.active { background: var(--primary-warm); color: white; }
         .nav-btn.logout { background: #FFB6B6; color: white; }
 
         @media (max-width: 1024px) {
             .diary-container { grid-template-columns: 1fr; }
             .customize-panel { display: none; }
+            .form-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -106,53 +122,28 @@
             </div>
 
             <div id="login" class="form-content active">
-                <div class="demo-credentials">
-                    ✓ 測試帳號：testuser / password123
-                </div>
+                <div class="demo-credentials">✓ 測試帳號：testuser / password123</div>
                 <form onsubmit="loginUser(event)">
-                    <div class="form-group">
-                        <label>帳號</label>
-                        <input type="text" id="user-username" required>
-                    </div>
-                    <div class="form-group">
-                        <label>密碼</label>
-                        <input type="password" id="user-password" required>
-                    </div>
+                    <div class="form-group"><label>帳號</label><input type="text" id="user-username" required></div>
+                    <div class="form-group"><label>密碼</label><input type="password" id="user-password" required></div>
                     <button type="submit" class="submit-btn">進入</button>
                 </form>
             </div>
 
             <div id="register" class="form-content">
                 <form onsubmit="registerUser(event)">
-                    <div class="form-group">
-                        <label>新帳號</label>
-                        <input type="text" id="reg-username" minlength="3" required>
-                    </div>
-                    <div class="form-group">
-                        <label>密碼</label>
-                        <input type="password" id="reg-password" minlength="6" required>
-                    </div>
-                    <div class="form-group">
-                        <label>確認密碼</label>
-                        <input type="password" id="reg-confirm-password" required>
-                    </div>
+                    <div class="form-group"><label>新帳號</label><input type="text" id="reg-username" minlength="3" required></div>
+                    <div class="form-group"><label>密碼</label><input type="password" id="reg-password" minlength="6" required></div>
+                    <div class="form-group"><label>確認密碼</label><input type="password" id="reg-confirm-password" required></div>
                     <button type="submit" class="submit-btn">建立帳號</button>
                 </form>
             </div>
 
             <div id="admin" class="form-content">
-                <div class="demo-credentials">
-                    ✓ 管理員帳號：admin001 / adminPass123
-                </div>
+                <div class="demo-credentials">✓ 管理員：admin001 / adminPass123</div>
                 <form onsubmit="loginAdmin(event)">
-                    <div class="form-group">
-                        <label>管理員帳號</label>
-                        <input type="text" id="admin-username" required>
-                    </div>
-                    <div class="form-group">
-                        <label>密碼</label>
-                        <input type="password" id="admin-password" required>
-                    </div>
+                    <div class="form-group"><label>帳號</label><input type="text" id="admin-username" required></div>
+                    <div class="form-group"><label>密碼</label><input type="password" id="admin-password" required></div>
                     <button type="submit" class="submit-btn">進入管理台</button>
                 </form>
             </div>
@@ -162,15 +153,16 @@
     <!-- APP -->
     <div id="mainApp" class="main-content">
         <div class="container">
-            <div class="header" id="appHeader">
-                <h1>💭 Flower Language</h1>
-            </div>
+            <div class="header" id="appHeader"><h1>💭 Flower Language</h1></div>
 
-            <div class="nav-tabs">
+            <div class="nav-tabs" id="navTabs">
                 <button class="nav-tab active" onclick="switchSection('dashboard', this)">📊 儀表板</button>
-                <button class="nav-tab" onclick="switchSection('diary', this)">✍️ 日記</button>
-                <button class="nav-tab" onclick="switchSection('emotions', this)">💭 心情</button>
+                <button class="nav-tab user-only" onclick="switchSection('diary', this)">✍️ 日記</button>
+                <button class="nav-tab user-only" onclick="switchSection('emotions', this)">💭 心情</button>
                 <button class="nav-tab" onclick="switchSection('shop', this)">🛍️ 商店</button>
+                <button class="nav-tab admin-only" style="display:none;" onclick="switchSection('flowers', this)">🌸 花卉</button>
+                <button class="nav-tab admin-only" style="display:none;" onclick="switchSection('products', this)">📦 商品</button>
+                <button class="nav-tab admin-only" style="display:none;" onclick="switchSection('moderation', this)">🔍 審查</button>
             </div>
 
             <!-- DASHBOARD -->
@@ -178,14 +170,8 @@
                 <div class="card">
                     <h2>📊 統計</h2>
                     <div class="stats-grid">
-                        <div class="stat-box">
-                            <div class="number" id="totalPoints">500</div>
-                            <div id="stat1-label">積分</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="number" id="itemsOwned">1</div>
-                            <div>已擁有物品</div>
-                        </div>
+                        <div class="stat-box"><div class="number" id="stat1">500</div><div id="stat1-label">積分</div></div>
+                        <div class="stat-box"><div class="number" id="stat2">1</div><div>已擁有物品</div></div>
                     </div>
                 </div>
             </div>
@@ -195,27 +181,15 @@
                 <div class="card">
                     <h2>✍️ 寫日記</h2>
                     <div class="diary-container">
-                        <div class="diary-editor" id="diaryEditor">
-                            <textarea class="diary-textarea" id="diaryText" placeholder="寫下今天的心情..."></textarea>
-                        </div>
+                        <div class="diary-editor" id="diaryEditor"><textarea class="diary-textarea" id="diaryText" placeholder="寫下今天的心情..."></textarea></div>
                         <div class="customize-panel">
-                            <button class="customize-btn">🎨 客製化手帳</button>
-                            
+                            <button class="customize-btn">🎨 客製化</button>
                             <div class="panel-tabs">
                                 <button class="panel-tab active" onclick="switchPanelTab('background', this)">🎨 背景</button>
                                 <button class="panel-tab" onclick="switchPanelTab('sticker', this)">✨ 貼紙</button>
                             </div>
-
-                            <div id="background" class="panel-content active">
-                                <h3 style="margin-bottom: 1rem;">選擇背景</h3>
-                                <div class="item-grid" id="backgroundList"></div>
-                            </div>
-
-                            <div id="sticker" class="panel-content">
-                                <h3 style="margin-bottom: 1rem;">選擇貼紙</h3>
-                                <div class="item-grid" id="stickerList"></div>
-                            </div>
-
+                            <div id="background" class="panel-content active"><h3>選擇背景</h3><div class="item-grid" id="backgroundList"></div></div>
+                            <div id="sticker" class="panel-content"><h3>選擇貼紙</h3><div class="item-grid" id="stickerList"></div></div>
                             <button class="submit-btn" style="margin-top: 1rem; width: 100%;" onclick="saveDiary()">💾 保存</button>
                         </div>
                     </div>
@@ -228,25 +202,18 @@
                     <h2>💭 記錄心情</h2>
                     <div style="margin-bottom: 2rem;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600;">
-                            <span>愉悅度</span>
-                            <span id="valenceValue">0.0</span>
+                            <span>愉悅度</span><span id="valenceValue">0.0</span>
                         </div>
                         <input type="range" id="valenceSlider" min="-1" max="1" step="0.1" value="0" oninput="updateEmotion()" style="width: 100%;">
                     </div>
-
                     <div style="margin-bottom: 2rem;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600;">
-                            <span>能量水平</span>
-                            <span id="arousalValue">0.0</span>
+                            <span>能量水平</span><span id="arousalValue">0.0</span>
                         </div>
                         <input type="range" id="arousalSlider" min="-1" max="1" step="0.1" value="0" oninput="updateEmotion()" style="width: 100%;">
                     </div>
-
-                    <h3 style="margin: 2rem 0 1rem; color: var(--primary-warm);">⭐ 推薦花卉</h3>
-                    <div class="flower-grid" id="recommendedFlowers">
-                        <p style="grid-column: 1 / -1; text-align: center;">調整滑桿以獲得推薦</p>
-                    </div>
-
+                    <h3>⭐ 推薦花卉</h3>
+                    <div class="flower-grid" id="recommendedFlowers"><p style="grid-column: 1 / -1; text-align: center;">調整滑桿以獲得推薦</p></div>
                     <button class="submit-btn" style="margin-top: 2rem;" onclick="recordEmotion()">✅ 記錄</button>
                 </div>
             </div>
@@ -258,13 +225,72 @@
                     <div class="flower-grid" id="shopItems"></div>
                 </div>
             </div>
+
+            <!-- ADMIN: FLOWERS -->
+            <div id="flowers" class="section">
+                <div class="card">
+                    <h2>🌸 管理花卉</h2>
+                    
+                    <h3>➕ 新增花卉</h3>
+                    <div class="form-section">
+                        <div class="form-grid">
+                            <div class="form-group"><label>花卉名稱（中文）</label><input type="text" id="flower-cn-name" placeholder="e.g. 向日葵"></div>
+                            <div class="form-group"><label>英文名稱</label><input type="text" id="flower-en-name" placeholder="e.g. Sunflower"></div>
+                            <div class="form-group"><label>Emoji</label><input type="text" id="flower-emoji" placeholder="🌻" maxlength="2"></div>
+                            <div class="form-group"><label>花語含意</label><input type="text" id="flower-language" placeholder="熱情、忠誠"></div>
+                            <div class="form-group"><label>愉悅度 (Valence) [-1~1]</label><input type="number" id="flower-valence" min="-1" max="1" step="0.1" value="0"></div>
+                            <div class="form-group"><label>能量水平 (Arousal) [-1~1]</label><input type="number" id="flower-arousal" min="-1" max="1" step="0.1" value="0"></div>
+                        </div>
+                        <button class="submit-btn" onclick="addFlower()">✅ 新增花卉</button>
+                    </div>
+
+                    <h3>📋 現有花卉</h3>
+                    <div class="item-list" id="flowersList"></div>
+                </div>
+            </div>
+
+            <!-- ADMIN: PRODUCTS -->
+            <div id="products" class="section">
+                <div class="card">
+                    <h2>📦 管理商品</h2>
+                    
+                    <h3>➕ 上架新商品</h3>
+                    <div class="form-section">
+                        <div class="form-grid">
+                            <div class="form-group"><label>商品名稱</label><input type="text" id="product-name" placeholder="e.g. 黎明楓葉"></div>
+                            <div class="form-group"><label>分類</label><select id="product-category"><option>背景</option><option>貼紙</option><option>音樂</option></select></div>
+                            <div class="form-group"><label>定價（積分）</label><input type="number" id="product-cost" min="0" value="100"></div>
+                            <div class="form-group"><label>Emoji</label><input type="text" id="product-emoji" placeholder="🍂" maxlength="2"></div>
+                            <div class="form-group"><label>顏色代碼</label><input type="color" id="product-color" value="#FFA500"></div>
+                            <div class="form-group"><label>商品描述</label><textarea id="product-description" placeholder="描述這個商品的特色..." style="height: 80px;"></textarea></div>
+                        </div>
+                        <button class="submit-btn" onclick="addProduct()">✅ 上架商品</button>
+                    </div>
+
+                    <h3>📋 已上架商品</h3>
+                    <div class="item-list" id="productsList"></div>
+                </div>
+            </div>
+
+            <!-- ADMIN: MODERATION -->
+            <div id="moderation" class="section">
+                <div class="card">
+                    <h2>🔍 內容審查</h2>
+                    <p style="color: var(--text-light); text-align: center; padding: 3rem;">
+                        📝 內容審查功能開發中...<br>
+                        待未來版本更新
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div class="bottom-nav">
             <button class="nav-btn active" onclick="switchSection('dashboard', this)">📊</button>
-            <button class="nav-btn" onclick="switchSection('diary', this)">✍️</button>
-            <button class="nav-btn" onclick="switchSection('emotions', this)">💭</button>
+            <button class="nav-btn user-only" onclick="switchSection('diary', this)">✍️</button>
+            <button class="nav-btn user-only" onclick="switchSection('emotions', this)">💭</button>
             <button class="nav-btn" onclick="switchSection('shop', this)">🛍️</button>
+            <button class="nav-btn admin-only" style="display:none;" onclick="switchSection('flowers', this)">🌸</button>
+            <button class="nav-btn admin-only" style="display:none;" onclick="switchSection('products', this)">📦</button>
             <button class="nav-btn logout" onclick="logout()">🚪 登出</button>
         </div>
     </div>
@@ -272,8 +298,8 @@
     <script>
         // ===== 數據 =====
         const flowers = [
-            { id: 1, cn: '向日葵', emoji: '🌻', valence: 0.95, arousal: 0.85 },
-            { id: 2, cn: '薰衣草', emoji: '💜', valence: 0.3, arousal: -0.7 },
+            { id: 1, cn: '向日葵', en: 'Sunflower', emoji: '🌻', language: '熱情、忠誠', valence: 0.95, arousal: 0.85 },
+            { id: 2, cn: '薰衣草', en: 'Lavender', emoji: '💜', language: '寧靜、優雅', valence: 0.3, arousal: -0.7 },
         ];
 
         const shopItems = [
@@ -295,7 +321,7 @@
         // ===== 登入 =====
         function switchLoginTab(tab, btn) {
             document.querySelectorAll('.form-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tabs .tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tab).classList.add('active');
             btn.classList.add('active');
         }
@@ -331,55 +357,54 @@
             const u = document.getElementById('admin-username').value;
             const p = document.getElementById('admin-password').value;
             if (u !== 'admin001' || p !== 'adminPass123') {
-                alert('❌ 管理員帳號或密碼錯誤');
+                alert('❌ 帳號或密碼錯誤');
                 return;
             }
-            currentUser = { role: 'admin', username: u, points: 999999 };
+            currentUser = { role: 'admin', username: u };
             showApp();
         }
 
         function showApp() {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('mainApp').classList.add('active');
+            
             if (currentUser.role === 'admin') {
                 document.getElementById('appHeader').innerHTML = '<h1>👑 管理員控制台</h1><p>系統管理 & 監控</p>';
+                document.querySelectorAll('.user-only').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
             } else {
                 document.getElementById('appHeader').innerHTML = '<h1>💭 ' + currentUser.nickname + ' 的療癒手帳</h1>';
+                document.querySelectorAll('.user-only').forEach(el => el.style.display = 'block');
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
             }
+            
             initializeApp();
         }
 
         // ===== 初始化 =====
         function initializeApp() {
-            console.log('🔧 初始化應用...');
-            
-            if (currentUser.role === 'admin') {
-                console.log('👑 管理員模式已啟用');
-                document.getElementById('diary').style.display = 'none';
-                document.getElementById('emotions').style.display = 'none';
-                const navTabs = document.querySelectorAll('.nav-tab');
-                navTabs[1].style.display = 'none';
-                navTabs[2].style.display = 'none';
-                document.getElementById('stat1-label').textContent = '商品數';
-            } else {
-                console.log('👤 用户模式');
-            }
-            
+            console.log(`🔧 初始化（${currentUser.role}模式）...`);
             renderShop();
-            renderCustomizePanel();
+            if (currentUser.role === 'user') {
+                renderCustomizePanel();
+                updateEmotion();
+            } else {
+                renderFlowersList();
+                renderProductsList();
+            }
             updateDashboard();
-            updateEmotion();
             console.log('✅ 初始化完成\n');
-            setTimeout(runSystemSelfTest, 300);
         }
 
         function updateDashboard() {
             if (currentUser.role === 'admin') {
-                document.getElementById('totalPoints').textContent = shopItems.length;
-                document.getElementById('itemsOwned').textContent = shopItems.filter(i => i.isOwned).length;
+                document.getElementById('stat1').textContent = shopItems.length;
+                document.getElementById('stat1-label').textContent = '商品數';
+                document.getElementById('stat2').textContent = flowers.length;
             } else {
-                document.getElementById('totalPoints').textContent = currentUser.points;
-                document.getElementById('itemsOwned').textContent = shopItems.filter(i => i.isOwned).length;
+                document.getElementById('stat1').textContent = currentUser.points;
+                document.getElementById('stat1-label').textContent = '積分';
+                document.getElementById('stat2').textContent = shopItems.filter(i => i.isOwned).length;
             }
         }
 
@@ -389,15 +414,8 @@
             const a = parseFloat(document.getElementById('arousalSlider').value);
             document.getElementById('valenceValue').textContent = v.toFixed(1);
             document.getElementById('arousalValue').textContent = a.toFixed(1);
-            const closest = flowers
-                .map(f => ({ ...f, d: Math.sqrt(Math.pow(v - f.valence, 2) + Math.pow(a - f.arousal, 2)) }))
-                .sort((a, b) => a.d - b.d)[0];
-            document.getElementById('recommendedFlowers').innerHTML = `
-                <div class="flower-card" style="background: linear-gradient(135deg, rgba(230, 161, 92, 0.1) 0%, rgba(107, 203, 119, 0.1) 100%); border: 3px solid var(--primary-warm);">
-                    <div class="flower-icon">${closest.emoji}</div>
-                    <h3>${closest.cn}</h3>
-                </div>
-            `;
+            const closest = flowers.map(f => ({ ...f, d: Math.sqrt(Math.pow(v - f.valence, 2) + Math.pow(a - f.arousal, 2)) })).sort((a, b) => a.d - b.d)[0];
+            document.getElementById('recommendedFlowers').innerHTML = `<div class="flower-card" style="background: linear-gradient(135deg, rgba(230, 161, 92, 0.1) 0%, rgba(107, 203, 119, 0.1) 100%); border: 3px solid var(--primary-warm);"><div class="flower-icon">${closest.emoji}</div><h3>${closest.cn}</h3><p>${closest.language}</p></div>`;
         }
 
         function recordEmotion() {
@@ -408,34 +426,18 @@
 
         // ===== 商店 =====
         function renderShop() {
-            console.log('🛍️ 渲染商店...');
             const html = shopItems.map(item => {
-                const btn = item.isOwned
-                    ? `<button class="buy-btn" disabled>✅ 已擁有</button>`
-                    : `<button class="buy-btn" onclick="purchaseItem('${item.id}')">🛒 購買</button>`;
-                return `
-                    <div class="flower-card">
-                        <div class="flower-icon">${item.emoji}</div>
-                        <h3>${item.name}</h3>
-                        <p>💐 ${item.cost}</p>
-                        ${btn}
-                    </div>
-                `;
+                const btn = item.isOwned ? `<button class="buy-btn" disabled>✅ 已擁有</button>` : `<button class="buy-btn" onclick="purchaseItem('${item.id}')">🛒 購買</button>`;
+                return `<div class="flower-card"><div class="flower-icon">${item.emoji}</div><h3>${item.name}</h3><p>💐 ${item.cost}</p>${btn}</div>`;
             }).join('');
             document.getElementById('shopItems').innerHTML = html;
-            console.log(`✅ 商店渲染完成，${document.querySelectorAll('.buy-btn').length} 個按鈕`);
         }
 
         function purchaseItem(id) {
-            console.log(`💳 購買: ${id}`);
             const item = shopItems.find(i => i.id === id);
-            if (currentUser.points < item.cost) {
-                alert('點數不夠');
-                return;
-            }
+            if (currentUser.points < item.cost) { alert('點數不夠'); return; }
             currentUser.points -= item.cost;
             item.isOwned = true;
-            console.log(`✅ 已購買，剩餘: ${currentUser.points}`);
             renderShop();
             renderCustomizePanel();
             updateDashboard();
@@ -444,7 +446,6 @@
 
         // ===== 客製化 =====
         function renderCustomizePanel() {
-            console.log('🎨 渲染客製化面板...');
             const bgHtml = shopItems.filter(i => i.type === 'background').map(item => `
                 <div class="item-slot ${!item.isOwned ? 'locked' : ''} ${item.id === currentBackground ? 'active' : ''}"
                      onclick="${!item.isOwned ? '' : `applyBackground('${item.id}')`}">
@@ -462,8 +463,6 @@
                 </div>
             `).join('');
             document.getElementById('stickerList').innerHTML = stickerHtml;
-            
-            console.log(`✅ 背景 ${shopItems.filter(i => i.type === 'background').length}, 貼紙 ${shopItems.filter(i => i.type === 'sticker').length}`);
         }
 
         function applyBackground(id) {
@@ -489,12 +488,109 @@
         }
 
         function saveDiary() {
-            if (!document.getElementById('diaryText').value.trim()) {
-                alert('請先寫日記');
-                return;
-            }
+            if (!document.getElementById('diaryText').value.trim()) { alert('請先寫日記'); return; }
             alert('💾 已保存！');
             document.getElementById('diaryText').value = '';
+        }
+
+        // ===== 管理員：花卉 =====
+        function addFlower() {
+            const cn = document.getElementById('flower-cn-name').value;
+            const en = document.getElementById('flower-en-name').value;
+            const emoji = document.getElementById('flower-emoji').value;
+            const language = document.getElementById('flower-language').value;
+            const valence = parseFloat(document.getElementById('flower-valence').value);
+            const arousal = parseFloat(document.getElementById('flower-arousal').value);
+            
+            if (!cn || !en || !emoji || !language) { alert('請填寫所有必填欄位'); return; }
+            
+            flowers.push({ id: flowers.length + 1, cn, en, emoji, language, valence, arousal });
+            alert('✅ 花卉已新增！');
+            document.getElementById('flower-cn-name').value = '';
+            document.getElementById('flower-en-name').value = '';
+            document.getElementById('flower-emoji').value = '';
+            document.getElementById('flower-language').value = '';
+            document.getElementById('flower-valence').value = '0';
+            document.getElementById('flower-arousal').value = '0';
+            renderFlowersList();
+            updateDashboard();
+        }
+
+        function deleteFlower(id) {
+            flowers.splice(flowers.findIndex(f => f.id === id), 1);
+            renderFlowersList();
+            updateDashboard();
+        }
+
+        function renderFlowersList() {
+            const html = flowers.map(f => `
+                <div class="item-card">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <span style="font-size: 2rem;">${f.emoji}</span>
+                        <div>
+                            <h4>${f.cn} / ${f.en}</h4>
+                            <p>${f.language}</p>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.85rem;">愉悅度: ${f.valence.toFixed(1)} | 能量: ${f.arousal.toFixed(1)}</p>
+                    <div class="action-buttons">
+                        <button class="btn-edit">✏️ 編輯</button>
+                        <button class="btn-delete" onclick="deleteFlower(${f.id})">🗑️ 刪除</button>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('flowersList').innerHTML = html;
+        }
+
+        // ===== 管理員：商品 =====
+        function addProduct() {
+            const name = document.getElementById('product-name').value;
+            const category = document.getElementById('product-category').value;
+            const cost = parseInt(document.getElementById('product-cost').value);
+            const emoji = document.getElementById('product-emoji').value;
+            const color = document.getElementById('product-color').value;
+            const desc = document.getElementById('product-description').value;
+            
+            if (!name || !emoji) { alert('請填寫必填欄位'); return; }
+            
+            const type = category === '背景' ? 'background' : category === '貼紙' ? 'sticker' : 'music';
+            shopItems.push({ id: 'p-' + Date.now(), name, emoji, type, color, cost, isOwned: false, desc });
+            alert('✅ 商品已上架！');
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-cost').value = '100';
+            document.getElementById('product-emoji').value = '';
+            document.getElementById('product-color').value = '#FFA500';
+            document.getElementById('product-description').value = '';
+            renderProductsList();
+            renderShop();
+            updateDashboard();
+        }
+
+        function deleteProduct(id) {
+            shopItems.splice(shopItems.findIndex(p => p.id === id), 1);
+            renderProductsList();
+            renderShop();
+            updateDashboard();
+        }
+
+        function renderProductsList() {
+            const html = shopItems.map(p => `
+                <div class="item-card">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <span style="font-size: 2rem;">${p.emoji}</span>
+                        <div>
+                            <h4>${p.name}</h4>
+                            <p>📂 ${p.type === 'background' ? '背景' : p.type === 'sticker' ? '貼紙' : '音樂'} | 💐 ${p.cost}</p>
+                        </div>
+                    </div>
+                    ${p.desc ? `<p style="font-size: 0.85rem; margin-bottom: 0.5rem;">${p.desc}</p>` : ''}
+                    <div class="action-buttons">
+                        <button class="btn-edit">✏️ 編輯</button>
+                        <button class="btn-delete" onclick="deleteProduct('${p.id}')">🗑️ 下架</button>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('productsList').innerHTML = html;
         }
 
         // ===== 導航 =====
@@ -516,60 +612,6 @@
             document.getElementById('reg-username').value = '';
             document.getElementById('reg-password').value = '';
             document.getElementById('reg-confirm-password').value = '';
-        }
-
-        // ===== 測試 =====
-        function runSystemSelfTest() {
-            console.log('\n' + '='.repeat(70));
-            console.log('🚀 開始執行 Flower Language 系統測試');
-            console.log('='.repeat(70) + '\n');
-
-            let pass = 0, fail = 0;
-
-            // 測試 1
-            console.log('📋 測試 1: 購買按鈕');
-            const buttons = document.querySelectorAll('.buy-btn').length;
-            console.log(`   └─ 找到 ${buttons} 個按鈕`);
-            buttons > 0 ? (console.log('✅ 通過\n'), pass++) : (console.error('❌ 失敗\n'), fail++);
-
-            // 測試 2
-            console.log('📋 測試 2: 客製化面板');
-            const bg = document.querySelectorAll('#backgroundList .item-slot').length;
-            const st = document.querySelectorAll('#stickerList .item-slot').length;
-            console.log(`   ├─ 背景: ${bg} | 貼紙: ${st}`);
-            bg > 0 && st > 0 ? (console.log('✅ 通過\n'), pass++) : (console.error('❌ 失敗\n'), fail++);
-
-            // 測試 3
-            console.log('📋 測試 3: 化名系統');
-            console.log(`   └─ ${currentUser.nickname}`);
-            currentUser.nickname.includes('葵') ? (console.log('✅ 通過\n'), pass++) : (console.error('❌ 失敗\n'), fail++);
-
-            // 測試 4
-            console.log('📋 測試 4: 商品狀態');
-            const owned = shopItems.filter(i => i.isOwned).length;
-            console.log(`   └─ 已擁有: ${owned}/${shopItems.length}`);
-            owned > 0 ? (console.log('✅ 通過\n'), pass++) : (console.error('❌ 失敗\n'), fail++);
-
-            // 測試 5
-            console.log('📋 測試 5: 函數完整性');
-            const fns = ['purchaseItem', 'applyBackground', 'toggleSticker', 'renderShop', 'renderCustomizePanel'];
-            const ok = fns.every(f => typeof window[f] === 'function');
-            ok ? (console.log('✅ 通過\n'), pass++) : (console.error('❌ 失敗\n'), fail++);
-
-            console.log('='.repeat(70));
-            console.log(`📊 結果: ✅ ${pass}/5 | ❌ ${fail}/5`);
-            console.log('='.repeat(70) + '\n');
-
-            if (fail === 0) {
-                console.log('🎉 完美！所有測試通過！\n');
-                console.log('📝 端到端流程：\n');
-                console.log('1️⃣  進入「🛍️ 商店」→ 點擊購買\n');
-                console.log('2️⃣  購買成功 → 按鈕變「已擁有」\n');
-                console.log('3️⃣  進入「✍️ 日記」→ 客製化面板出現\n');
-                console.log('4️⃣  點擊已購買背景 → 日記顏色立即變色\n');
-                console.log('5️⃣  點擊已購買貼紙 → 狀態變 active\n');
-                console.log('✨ 系統準備就緒！\n');
-            }
         }
     </script>
 </body>
