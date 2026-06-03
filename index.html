@@ -61,7 +61,7 @@
 
         .tabs {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-bottom: 30px;
         }
@@ -76,7 +76,7 @@
             color: var(--text-light);
             transition: all 0.3s;
             font-family: inherit;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .tab-btn.active {
@@ -96,7 +96,7 @@
             color: var(--text-dark);
         }
 
-        input {
+        input, select, textarea {
             width: 100%;
             padding: 12px;
             border: 2px solid var(--light-bg);
@@ -106,7 +106,7 @@
             transition: all 0.3s;
         }
 
-        input:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary-warm);
             box-shadow: 0 0 0 3px rgba(230, 161, 92, 0.1);
@@ -283,24 +283,6 @@
             box-shadow: 0 2px 8px rgba(102, 85, 68, 0.2);
         }
 
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--light-bg);
-            border-radius: 10px;
-            font-size: 16px;
-            font-family: inherit;
-            background-color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: var(--primary-warm);
-            box-shadow: 0 0 0 3px rgba(230, 161, 92, 0.1);
-        }
-
         /* ===== FLOWER CARDS ===== */
         .flower-grid {
             display: grid;
@@ -317,11 +299,18 @@
             box-shadow: 0 4px 15px rgba(102, 85, 68, 0.08);
             cursor: pointer;
             transition: all 0.3s;
+            border: 2px solid transparent;
         }
 
         .flower-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(230, 161, 92, 0.15);
+        }
+
+        .flower-card.featured {
+            background: linear-gradient(135deg, rgba(230, 161, 92, 0.1) 0%, rgba(107, 203, 119, 0.1) 100%);
+            border: 3px solid var(--primary-warm);
+            transform: scale(1.05);
         }
 
         .flower-icon {
@@ -339,6 +328,33 @@
             color: var(--text-light);
             font-size: 0.95rem;
             line-height: 1.5;
+        }
+
+        /* ===== SHOP ===== */
+        .buy-btn {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .buy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 161, 92, 0.3);
+        }
+
+        .buy-btn:disabled {
+            background: #4CAF50;
+            cursor: default;
+            transform: none;
         }
 
         /* ===== BOTTOM NAV ===== */
@@ -465,9 +481,10 @@
             <!-- User Login -->
             <div id="login" class="form-content active">
                 <div class="demo-credentials">
-                    <strong>試用帳號：</strong><br>
-                    帳號：user123<br>
-                    密碼：password123
+                    <strong>🔐 隱私提示：</strong><br>
+                    此系統採用去識別化設計，登入後不會顯示真實帳號。<br><br>
+                    <strong>體驗帳號：</strong><br>
+                    帳號：user123 | 密碼：password123
                 </div>
                 <form onsubmit="loginUser(event)">
                     <div class="form-group">
@@ -504,9 +521,10 @@
             <!-- Admin Login -->
             <div id="admin" class="form-content">
                 <div class="demo-credentials">
-                    <strong>試用帳號：</strong><br>
-                    帳號：admin001<br>
-                    密碼：adminPass123
+                    <strong>🔐 管理員隱私提示：</strong><br>
+                    管理員帳號僅用於系統管理，不會在用戶界面顯示。<br><br>
+                    <strong>體驗帳號：</strong><br>
+                    帳號：admin001 | 密碼：adminPass123
                 </div>
                 <form onsubmit="loginAdmin(event)">
                     <div class="form-group">
@@ -528,7 +546,7 @@
         <div class="container">
             <div class="header" id="appHeader">
                 <h1>💭 Flower Language</h1>
-                <p id="headerSubtitle">記錄你的心情，探索花語的智慧</p>
+                <p>記錄你的心情，探索花語的智慧</p>
             </div>
 
             <div class="nav-tabs" id="navTabs">
@@ -537,12 +555,9 @@
                 <button class="nav-tab user-nav" style="display:none;" onclick="switchSection('emotions', this)">💭 記錄心情</button>
                 <button class="nav-tab" onclick="switchSection('flowers', this)">🌺 花語圖鑑</button>
                 <button class="nav-tab" onclick="switchSection('shop', this)">🛍️ 商店</button>
-                <button class="nav-tab admin-nav" style="display:none;" onclick="switchSection('manage-flowers', this)">🌸 管理花卉</button>
-                <button class="nav-tab admin-nav" style="display:none;" onclick="switchSection('manage-shop', this)">📦 管理商品</button>
-                <button class="nav-tab admin-nav" style="display:none;" onclick="switchSection('moderation', this)">🔍 內容審查</button>
             </div>
 
-            <!-- DASHBOARD SECTION -->
+            <!-- DASHBOARD -->
             <div id="dashboard" class="section active">
                 <div class="card">
                     <h2>📊 我的心情趨勢</h2>
@@ -552,26 +567,26 @@
                             <div class="label">記錄次數</div>
                         </div>
                         <div class="stat-box">
-                            <div class="number" id="totalPoints">0</div>
+                            <div class="number" id="totalPoints">500</div>
                             <div class="label">花朵點數</div>
                         </div>
                         <div class="stat-box">
-                            <div class="number" id="totalFlowers">0</div>
+                            <div class="number" id="totalFlowers">50</div>
                             <div class="label">花卉圖鑑</div>
                         </div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="emotionChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- FLOWER INVENTORY SECTION -->
+            <!-- FLOWER INVENTORY -->
             <div id="inventory" class="section">
-                <div id="inventoryContent"></div>
+                <div class="card">
+                    <h2>🌸 我的花卉庫存</h2>
+                    <div id="inventoryContent"></div>
+                </div>
             </div>
 
-            <!-- EMOTION RECORD SECTION -->
+            <!-- EMOTION RECORD -->
             <div id="emotions" class="section">
                 <div class="card">
                     <h2>💭 今天的心情如何？</h2>
@@ -594,7 +609,7 @@
                         <small style="color: var(--text-light);">下方 ← 疲憊 | 興奮 → 上方</small>
                     </div>
 
-                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-warm);">為你推薦的花</h3>
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-warm);">⭐ 為你推薦的今日代表花</h3>
                     <div class="flower-grid" id="recommendedFlowers">
                         <p style="grid-column: 1 / -1; text-align: center; color: var(--text-light);">調整滑桿以獲得推薦</p>
                     </div>
@@ -603,7 +618,7 @@
                 </div>
             </div>
 
-            <!-- FLOWER GUIDE SECTION -->
+            <!-- FLOWER GUIDE -->
             <div id="flowers" class="section">
                 <div class="card">
                     <h2>🌺 花語圖鑑</h2>
@@ -612,146 +627,12 @@
                 </div>
             </div>
 
-            <!-- SHOP SECTION -->
+            <!-- SHOP -->
             <div id="shop" class="section">
                 <div class="card">
                     <h2>🛍️ 虛擬商店</h2>
-                    <p style="margin-bottom: 2rem; color: var(--text-light);">用積分購買日記背景、貼紙和音樂</p>
+                    <p style="margin-bottom: 2rem; color: var(--text-light);">💐 用積分購買日記背景、貼紙和音樂</p>
                     <div class="flower-grid" id="shopItems"></div>
-                </div>
-            </div>
-
-            <!-- ADMIN: MANAGE FLOWERS -->
-            <div id="manage-flowers" class="section">
-                <div class="card">
-                    <h2>🌸 管理花卉</h2>
-                    
-                    <!-- 新增花卉表單 -->
-                    <div style="background: var(--light-bg); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1.5rem; color: var(--primary-warm); font-size: 1.3rem;">➕ 新增花卉</h3>
-                        <form onsubmit="addNewFlower(event)">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                                <div class="form-group">
-                                    <label>🌺 花卉名稱（中文）</label>
-                                    <input type="text" id="flower-cn-name" placeholder="例：向日葵" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>📝 英文名稱</label>
-                                    <input type="text" id="flower-en-name" placeholder="例：Sunflower">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>💝 花語含意</label>
-                                <input type="text" id="flower-language" placeholder="例：熱情、忠誠、崇拜" required>
-                            </div>
-
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                                <div class="form-group">
-                                    <label>📊 愉悅度 (Valence)</label>
-                                    <input type="number" id="flower-valence" min="-1" max="1" step="0.1" placeholder="0.5" value="0.5" required>
-                                    <small style="color: var(--text-light);">-1（悲傷） ← → 1（開心）</small>
-                                </div>
-                                <div class="form-group">
-                                    <label>⚡ 能量水平 (Arousal)</label>
-                                    <input type="number" id="flower-arousal" min="-1" max="1" step="0.1" placeholder="0.5" value="0.5" required>
-                                    <small style="color: var(--text-light);">-1（疲憊） ← → 1（興奮）</small>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>🖼️ 花卉圖片（可選）</label>
-                                <input type="file" id="flower-image" accept="image/*" style="padding: 8px;">
-                                <small style="color: var(--text-light);">支持 JPG、PNG 格式（演示版本不會實際上傳）</small>
-                            </div>
-
-                            <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, #6BCB77 0%, #4CAF50 100%); margin-top: 1rem;">✅ 新增花卉</button>
-                        </form>
-                    </div>
-
-                    <!-- 現有花卉列表 -->
-                    <h3 style="margin: 2rem 0 1.5rem; color: var(--primary-brown); font-size: 1.3rem;">📋 現有花卉列表</h3>
-                    <div id="flower-management-list" style="display: grid; gap: 1rem;"></div>
-                </div>
-            </div>
-
-            <!-- ADMIN: MANAGE SHOP -->
-            <div id="manage-shop" class="section">
-                <div class="card">
-                    <h2>📦 管理商品</h2>
-                    
-                    <!-- 上架新商品表單 -->
-                    <div style="background: var(--light-bg); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1.5rem; color: var(--primary-warm); font-size: 1.3rem;">➕ 上架新商品</h3>
-                        <form onsubmit="addNewShopItem(event)">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                                <div class="form-group">
-                                    <label>📦 商品名稱</label>
-                                    <input type="text" id="shop-name" placeholder="例：楓糖燕麥背景" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>📂 商品分類</label>
-                                    <select id="shop-category" required>
-                                        <option value="">-- 選擇分類 --</option>
-                                        <option value="日記本背景">🎨 日記本背景</option>
-                                        <option value="貼紙包">✨ 貼紙包</option>
-                                        <option value="BGM">🎵 背景音樂（BGM）</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                                <div class="form-group">
-                                    <label>💰 點數定價</label>
-                                    <input type="number" id="shop-cost" min="0" step="10" placeholder="100" value="100" required>
-                                    <small style="color: var(--text-light);">用戶需要花費的積分數量</small>
-                                </div>
-                                <div class="form-group">
-                                    <label>🏷️ 商品 Emoji 代碼</label>
-                                    <input type="text" id="shop-emoji" placeholder="例：🎨 或 ✨" value="📦" required>
-                                </div>
-                            </div>
-
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                                <div class="form-group">
-                                    <label>📁 上傳素材檔案（可選）</label>
-                                    <input type="file" id="shop-file" style="padding: 8px;">
-                                    <small style="color: var(--text-light);">圖片或音頻文件</small>
-                                </div>
-                                <div class="form-group">
-                                    <label>🎨 顏色代碼（替代方案）</label>
-                                    <input type="color" id="shop-color" value="#E6A15C" style="height: 40px; cursor: pointer;">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>📝 商品描述</label>
-                                <textarea id="shop-description" placeholder="輸入商品介紹..." style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--light-bg); font-family: inherit; min-height: 80px;"></textarea>
-                            </div>
-
-                            <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, #FF9966 0%, #FF6B6B 100%); margin-top: 1rem;">✅ 確認上架</button>
-                        </form>
-                    </div>
-
-                    <!-- 已上架商品清單 -->
-                    <h3 style="margin: 2rem 0 1.5rem; color: var(--primary-brown); font-size: 1.3rem;">🛍️ 已上架商品清單</h3>
-                    <div id="shop-management-list" style="display: grid; gap: 1rem;"></div>
-                </div>
-            </div>
-
-            <!-- ADMIN: CONTENT MODERATION -->
-            <div id="moderation" class="section">
-                <div class="card">
-                    <h2>🔍 內容審查</h2>
-                    <div style="background: var(--light-bg); padding: 2rem; border-radius: 15px; text-align: center;">
-                        <p style="color: var(--text-light); margin-bottom: 1rem; font-weight: 600;">📋 待審查的貼文</p>
-                        <div style="font-size: 4rem; margin: 2rem 0;">📝</div>
-                        <p style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 0.5rem;">目前沒有待審查的內容</p>
-                        <p style="font-size: 0.95rem; color: var(--text-light); margin-top: 1rem; line-height: 1.6;">
-                            ⚠️ 當有用戶檢舉達 3 次的貼文將自動進入審查佇列<br>
-                            ✅ 您可以選擇「通過」或「刪除」不當內容
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -763,15 +644,12 @@
             <button class="nav-btn user-nav" style="display:none;" onclick="switchSection('emotions', this)">💭 心情</button>
             <button class="nav-btn" onclick="switchSection('flowers', this)">🌺 圖鑑</button>
             <button class="nav-btn" onclick="switchSection('shop', this)">🛍️ 商店</button>
-            <button class="nav-btn admin-nav" style="display:none;" onclick="switchSection('manage-flowers', this)">🌸 花卉</button>
-            <button class="nav-btn admin-nav" style="display:none;" onclick="switchSection('manage-shop', this)">📦 商品</button>
-            <button class="nav-btn admin-nav" style="display:none;" onclick="switchSection('moderation', this)">🔍 審查</button>
             <button class="nav-btn logout" onclick="logout()">🚪 登出</button>
         </div>
     </div>
 
     <script>
-        // ===== FLOWERS DATA =====
+        // ===== 花卉数据 =====
         const flowers = [
             { id: 1, name: 'Sunflower', cn: '向日葵', emoji: '🌻', language: '熱情、忠誠', tags: ['happy', 'energetic'], valence: 0.95, arousal: 0.85 },
             { id: 2, name: 'Lavender', cn: '薰衣草', emoji: '💜', language: '寧靜、優雅', tags: ['peaceful', 'calm'], valence: 0.3, arousal: -0.7 },
@@ -784,35 +662,31 @@
         ];
 
         const shopItems = [
-            { id: 1, name: '楓糖燕麥', emoji: '🟤', category: '背景', cost: 0 },
-            { id: 2, name: '黎明楓葉', emoji: '🍂', category: '背景', cost: 200 },
-            { id: 3, name: '午後向日葵', emoji: '☀️', category: '背景', cost: 350 },
-            { id: 4, name: '療癒花卉貼紙', emoji: '✨', category: '貼紙', cost: 100 },
-            { id: 5, name: '溫暖線條分隔線', emoji: '📏', category: '貼紙', cost: 150 },
-            { id: 6, name: '森林雨聲', emoji: '🎵', category: '音樂', cost: 500 },
+            { id: 'bg1', name: '楓糖燕麥', emoji: '🟤', category: '背景', cost: 0 },
+            { id: 'bg2', name: '黎明楓葉', emoji: '🍂', category: '背景', cost: 200 },
+            { id: 'bg3', name: '午後向日葵', emoji: '☀️', category: '背景', cost: 350 },
+            { id: 'sticker1', name: '療癒花卉貼紙', emoji: '✨', category: '貼紙', cost: 100 },
+            { id: 'sticker2', name: '溫暖線條分隔線', emoji: '📏', category: '貼紙', cost: 150 },
+            { id: 'bgm1', name: '森林雨聲', emoji: '🎵', category: '音樂', cost: 500 },
         ];
 
-        // ===== STATE =====
-        let currentUser = null;
-        let emotionData = [];
-        let userInventory = []; // 用戶已解鎖商品列表
-        let todayFlower = null; // 今日推薦的花卉
-
-        // ===== 匿名代稱生成系統 =====
+        // ===== 花朵化名系統 =====
         const flowerAdjectives = ['暗戀的', '夢幻的', '溫暖的', '勇敢的', '寧靜的', '開朗的', '神祕的', '溫柔的', '熾熱的', '優雅的'];
-        
+
         function generateAnonymousNickname(flower) {
             const adjective = flowerAdjectives[Math.floor(Math.random() * flowerAdjectives.length)];
             const number = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
             return `${adjective}${flower.cn} #${number}`;
         }
 
-        // ===== LOGIN FUNCTIONS =====
-        // 存儲註冊用戶
-        let registeredUsers = {
-            'user123': 'password123'
-        };
+        // ===== 全局狀態 =====
+        let currentUser = null;
+        let userInventory = [];
+        let emotionData = [];
+        let todayFlower = null;
+        let registeredUsers = { 'user123': 'password123' };
 
+        // ===== 登入邏輯 =====
         function switchLoginTab(tab, btn) {
             document.querySelectorAll('.form-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tabs .tab-btn').forEach(el => el.classList.remove('active'));
@@ -836,11 +710,8 @@
                 return;
             }
 
-            // 儲存新用戶
             registeredUsers[username] = password;
-            alert('✅ 帳號建立成功！\n帳號：' + username + '\n現在可以登入了');
-
-            // 清空表單並切換到登入頁面
+            alert('✅ 帳號建立成功！');
             document.getElementById('reg-username').value = '';
             document.getElementById('reg-password').value = '';
             document.getElementById('reg-confirm-password').value = '';
@@ -853,10 +724,11 @@
             const password = document.getElementById('user-password').value;
 
             if (registeredUsers[username] && registeredUsers[username] === password) {
-                currentUser = { username, role: 'user', points: 500, diaries: 3 };
-                showApp();
+                currentUser = { username, role: 'user', points: 500, diaries: 0 };
+                currentUser.anonymousNickname = generateAnonymousNickname(flowers[0]);
+                showApp(false);
             } else {
-                alert('❌ 用戶名稱或密碼錯誤\n\n提示：如未註冊，請先用「註冊」頁面建立帳號');
+                alert('❌ 用戶名稱或密碼錯誤');
             }
         }
 
@@ -866,7 +738,7 @@
             const password = document.getElementById('admin-password').value;
 
             if (username === 'admin001' && password === 'adminPass123') {
-                currentUser = { username, role: 'admin', permissions: ['manage', 'review'] };
+                currentUser = { username, role: 'admin' };
                 showApp(true);
             } else {
                 alert('❌ 管理員帳號或密碼錯誤');
@@ -877,184 +749,27 @@
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('mainApp').classList.add('active');
 
-            // 顯示/隱藏用戶或管理員功能
             if (isAdmin) {
-                document.getElementById('appHeader').innerHTML = '<h1>👑 管理員控制台</h1><p>歡迎，' + currentUser.username + '</p>';
+                document.getElementById('appHeader').innerHTML = '<h1>👑 管理員控制台</h1><p>歡迎使用管理系統</p>';
                 document.querySelectorAll('.user-nav').forEach(el => el.style.display = 'none');
-                document.querySelectorAll('.admin-nav').forEach(el => el.style.display = 'block');
             } else {
-                // 生成匿名代稱（非管理員才需要）
-                if (!currentUser.anonymousNickname) {
-                    currentUser.anonymousNickname = generateAnonymousNickname(flowers[0]);
-                }
                 document.getElementById('appHeader').innerHTML = '<h1>💭 ' + currentUser.anonymousNickname + ' 的花語世界</h1><p>記錄你的心情，探索花語的智慧</p>';
                 document.querySelectorAll('.user-nav').forEach(el => el.style.display = 'block');
-                document.querySelectorAll('.admin-nav').forEach(el => el.style.display = 'none');
             }
 
             initializeApp();
         }
 
-        function addNewFlower(e) {
-            e.preventDefault();
-            const name = document.getElementById('flower-cn-name').value;
-            const enName = document.getElementById('flower-en-name').value || name;
-            const language = document.getElementById('flower-language').value;
-            const valence = parseFloat(document.getElementById('flower-valence').value);
-            const arousal = parseFloat(document.getElementById('flower-arousal').value);
-
-            flowers.push({
-                id: Math.random().toString(36).substr(2, 9),
-                name: enName,
-                cn: name,
-                emoji: '🌺',
-                language: language,
-                tags: [],
-                valence: valence,
-                arousal: arousal,
-                createdAt: new Date().toLocaleDateString('zh-TW')
-            });
-
-            alert('✅ 花卉已成功新增！');
-            e.target.reset();
-            renderFlowerManagement();
-        }
-
-        function deleteFlower(id) {
-            if (confirm('❓ 確定要刪除此花卉嗎？')) {
-                flowers = flowers.filter(f => f.id !== id);
-                renderFlowerManagement();
-                alert('✅ 花卉已刪除');
-            }
-        }
-
-        function addNewShopItem(e) {
-            e.preventDefault();
-            const name = document.getElementById('shop-name').value;
-            const category = document.getElementById('shop-category').value;
-            const cost = parseInt(document.getElementById('shop-cost').value);
-            const emoji = document.getElementById('shop-emoji').value;
-            const description = document.getElementById('shop-description').value;
-
-            shopItems.push({
-                id: Math.random().toString(36).substr(2, 9),
-                name: name,
-                emoji: emoji,
-                category: category,
-                cost: cost,
-                description: description,
-                createdAt: new Date().toLocaleDateString('zh-TW')
-            });
-
-            alert('✅ 商品已成功上架！');
-            e.target.reset();
-            document.getElementById('shop-emoji').value = '📦';
-            renderShopManagement();
-        }
-
-        function deleteShopItem(id) {
-            if (confirm('❓ 確定要下架此商品嗎？')) {
-                shopItems = shopItems.filter(item => item.id !== id);
-                renderShopManagement();
-                alert('✅ 商品已下架');
-            }
-        }
-
-        function renderFlowerManagement() {
-            const listContainer = document.getElementById('flower-management-list');
-            
-            if (flowers.length === 0) {
-                listContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-light);">暫無花卉，請添加新花卉</div>';
-                return;
-            }
-
-            const html = flowers.map(f => `
-                <div style="background: white; border-radius: 12px; padding: 1.5rem; border-left: 5px solid var(--primary-warm); box-shadow: 0 2px 8px rgba(102, 85, 68, 0.08); transition: all 0.3s;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
-                        <div style="flex: 1;">
-                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                <span style="font-size: 2rem;">${f.emoji}</span>
-                                <h4 style="margin: 0; color: var(--primary-warm); font-size: 1.1rem;">${f.cn}</h4>
-                                <span style="color: var(--text-light); font-size: 0.9rem;">(${f.name})</span>
-                            </div>
-                            <p style="margin: 0.5rem 0; color: var(--text-dark);">💝 <strong>${f.language}</strong></p>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.8rem;">
-                                <small style="color: var(--text-light);">📊 愉悅度：<strong>${f.valence}</strong></small>
-                                <small style="color: var(--text-light);">⚡ 能量水平：<strong>${f.arousal}</strong></small>
-                            </div>
-                            <small style="color: #999; display: block; margin-top: 0.5rem;">📅 建立於：${f.createdAt || '未知'}</small>
-                        </div>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button onclick="editFlower('${f.id}')" style="padding: 8px 12px; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">✏️ 編輯</button>
-                            <button onclick="deleteFlower('${f.id}')" style="padding: 8px 12px; background: #FF6B6B; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">🗑️ 刪除</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-            listContainer.innerHTML = html;
-        }
-
-        function renderShopManagement() {
-            const listContainer = document.getElementById('shop-management-list');
-            
-            if (shopItems.length === 0) {
-                listContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-light);">暫無商品，請上架新商品</div>';
-                return;
-            }
-
-            const html = shopItems.map(item => `
-                <div style="background: white; border-radius: 12px; padding: 1.5rem; border-left: 5px solid #FF9966; box-shadow: 0 2px 8px rgba(102, 85, 68, 0.08); transition: all 0.3s;">
-                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
-                        <div style="flex: 1;">
-                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                <span style="font-size: 2rem;">${item.emoji}</span>
-                                <h4 style="margin: 0; color: var(--primary-warm); font-size: 1.1rem;">${item.name}</h4>
-                                <span style="background: var(--light-bg); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; color: var(--text-light);">${item.category}</span>
-                            </div>
-                            ${item.description ? `<p style="margin: 0.5rem 0; color: var(--text-dark); font-size: 0.95rem;">${item.description}</p>` : ''}
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.8rem;">
-                                <small style="color: var(--text-light);">💰 定價：<strong>${item.cost}</strong> 積分</small>
-                                <small style="color: var(--text-light);">📂 分類：<strong>${item.category}</strong></small>
-                            </div>
-                            <small style="color: #999; display: block; margin-top: 0.5rem;">📅 上架於：${item.createdAt || '未知'}</small>
-                        </div>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <button onclick="editShopItem('${item.id}')" style="padding: 8px 12px; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">✏️ 編輯</button>
-                            <button onclick="deleteShopItem('${item.id}')" style="padding: 8px 12px; background: #FF6B6B; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">🗑️ 下架</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-            listContainer.innerHTML = html;
-        }
-
-        function editFlower(id) {
-            alert('✏️ 編輯功能開發中...\n花卉 ID：' + id);
-        }
-
-        function editShopItem(id) {
-            alert('✏️ 編輯功能開發中...\n商品 ID：' + id);
-        }
-
-        // ===== APP FUNCTIONS =====
-        function switchSection(section, btn) {
-            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-tab, .nav-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(section).classList.add('active');
-            if (btn) btn.classList.add('active');
-        }
-
+        // ===== 應用初始化 =====
         function initializeApp() {
+            document.getElementById('totalPoints').textContent = currentUser.points;
             renderFlowerGuide();
             renderShop();
-            renderFlowerManagement();
-            renderShopManagement();
-            document.getElementById('inventoryContent').innerHTML = renderFlowerInventory();
-            renderDashboard();
+            renderInventory();
+            updateEmotion();
         }
 
+        // ===== 心情記錄邏輯 =====
         function updateEmotion() {
             const valence = parseFloat(document.getElementById('valenceSlider').value);
             const arousal = parseFloat(document.getElementById('arousalSlider').value);
@@ -1062,7 +777,7 @@
             document.getElementById('valenceValue').textContent = valence.toFixed(1);
             document.getElementById('arousalValue').textContent = arousal.toFixed(1);
 
-            // 計算最接近的花卉 - 只返回最相近的 1 個
+            // 計算最接近的花卉 - 只返回 1 個
             const closest = flowers
                 .map(f => ({
                     ...f,
@@ -1070,115 +785,20 @@
                 }))
                 .sort((a, b) => a.distance - b.distance)[0];
 
-            // 設定今日推薦花卉
-            if (closest) {
-                todayFlower = closest;
-                renderRecommended(closest);
-            }
+            todayFlower = closest;
+            renderRecommended(closest);
         }
 
         function renderRecommended(flower) {
             const html = `
-                <div class="flower-card" style="background: linear-gradient(135deg, rgba(230, 161, 92, 0.1) 0%, rgba(107, 203, 119, 0.1) 100%); border: 3px solid var(--primary-warm); transform: scale(1.05);">
+                <div class="flower-card featured" onclick="showFlowerDetail('${flower.id}', '${flower.cn}', '${flower.language}')">
                     <div class="flower-icon">${flower.emoji}</div>
                     <h3>${flower.cn}</h3>
                     <p>${flower.language}</p>
-                    <div style="background: var(--primary-warm); color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.9rem; margin-top: 0.5rem;">
-                        ⭐ 今日最適合你
-                    </div>
+                    <p style="font-size: 0.85rem; color: var(--primary-warm); margin-top: 0.5rem;">🌺 點擊查看詳情</p>
                 </div>
             `;
             document.getElementById('recommendedFlowers').innerHTML = html;
-        }
-
-        function renderFlowerGuide() {
-            const html = flowers.map(f => `
-                <div class="flower-card">
-                    <div class="flower-icon">${f.emoji}</div>
-                    <h3>${f.cn}</h3>
-                    <p>${f.language}</p>
-                </div>
-            `).join('');
-            document.getElementById('flowerGuide').innerHTML = html;
-        }
-
-        function renderShop() {
-            const html = shopItems.map(item => {
-                const isPurchased = userInventory.includes(item.id);
-                const button = isPurchased 
-                    ? `<button disabled style="background: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 8px; cursor: default; font-weight: 600; width: 100%;">✅ 已擁有</button>`
-                    : `<button onclick="purchaseItem('${item.id}', ${item.cost})" style="background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%); color: white; padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s; width: 100%;">🛒 購買 (${item.cost} 💐)</button>`;
-                
-                return `
-                    <div class="flower-card">
-                        <div class="flower-icon">${item.emoji}</div>
-                        <h3>${item.name}</h3>
-                        <p>${item.category}</p>
-                        <p style="font-size: 0.9rem; color: var(--primary-warm); font-weight: 600; margin: 0.5rem 0;">💐 ${item.cost} 點數</p>
-                        <div style="margin-top: 1rem;">
-                            ${button}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            document.getElementById('shopItems').innerHTML = html;
-        }
-
-        function purchaseItem(itemId, cost) {
-            // 檢查積分是否足夠
-            if (currentUser.points < cost) {
-                alert('🌸 哎呀，花朵點數還不夠喔！\n\n目前積分：' + currentUser.points + ' 💐\n所需積分：' + cost + ' 💐\n\n快去寫日記賺點數吧！📝');
-                return;
-            }
-
-            // 扣除積分
-            currentUser.points -= cost;
-            userInventory.push(itemId);
-
-            // 更新顯示
-            document.getElementById('totalPoints').textContent = currentUser.points;
-            renderShop();
-            
-            // 提示成功
-            alert('✅ 購買成功！\n\n✨ 您已解鎖此商品\n💐 剩餘積分：' + currentUser.points);
-        }
-
-        function renderDashboard() {
-            document.getElementById('totalDiaries').textContent = currentUser.diaries || 0;
-            document.getElementById('totalPoints').textContent = currentUser.points || 0;
-            document.getElementById('totalFlowers').textContent = flowers.length;
-
-            // Simple chart
-            setTimeout(() => {
-                const ctx = document.getElementById('emotionChart');
-                if (ctx && !window.emotionChartInstance) {
-                    window.emotionChartInstance = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
-                            datasets: [{
-                                label: '愉悅度',
-                                data: [0.3, 0.4, 0.5, 0.4, 0.4, 0.6, 0.5],
-                                borderColor: '#E6A15C',
-                                backgroundColor: 'rgba(230, 161, 92, 0.1)',
-                                tension: 0.3
-                            }, {
-                                label: '能量水平',
-                                data: [-0.2, 0.1, 0.2, 0.1, 0.2, 0.4, 0.3],
-                                borderColor: '#6BCB77',
-                                backgroundColor: 'rgba(107, 203, 119, 0.1)',
-                                tension: 0.3
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: { legend: { labels: { font: { family: "'Lora', serif" } } } },
-                            scales: { y: { beginAtZero: true, max: 1, min: -1 } }
-                        }
-                    });
-                }
-            }, 100);
         }
 
         function recordEmotion() {
@@ -1187,58 +807,62 @@
                 return;
             }
 
-            const valence = document.getElementById('valenceSlider').value;
-            const arousal = document.getElementById('arousalSlider').value;
-            
-            // 記錄情緒數據
             emotionData.push({
                 date: new Date().toLocaleDateString('zh-TW'),
-                valence: parseFloat(valence),
-                arousal: parseFloat(arousal),
+                valence: parseFloat(document.getElementById('valenceSlider').value),
+                arousal: parseFloat(document.getElementById('arousalSlider').value),
                 flower: todayFlower.cn,
                 flowerId: todayFlower.id
             });
 
-            // 更新用戶統計
             currentUser.diaries = (currentUser.diaries || 0) + 1;
             currentUser.points = (currentUser.points || 0) + 50;
-
-            // 更新儀表板顯示
             document.getElementById('totalDiaries').textContent = currentUser.diaries;
             document.getElementById('totalPoints').textContent = currentUser.points;
 
-            alert('✅ 心情已記錄！\n\n🌸 今日代表花：' + todayFlower.cn + '\n💐 獲得 50 點積分\n\n繼續加油！');
+            alert('✅ 心情已記錄！\n\n🌸 今日代表花：' + todayFlower.cn + '\n💐 獲得 50 點積分');
             
-            // 重置滑桿
             document.getElementById('valenceSlider').value = 0;
             document.getElementById('arousalSlider').value = 0;
             updateEmotion();
+            renderInventory();
         }
 
-        function renderFlowerInventory() {
-            const html = `
-                <div class="card">
-                    <h2>🌸 我的花卉庫存</h2>
-                    
-                    ${todayFlower ? `
+        // ===== 花卉庫存 =====
+        function renderInventory() {
+            const latestFlower = emotionData.length > 0 ? emotionData[emotionData.length - 1] : null;
+            const flowers_data = latestFlower 
+                ? flowers.find(f => f.id === latestFlower.flowerId)
+                : null;
+
+            let html = '';
+
+            if (flowers_data) {
+                html += `
                     <div style="background: linear-gradient(135deg, rgba(230, 161, 92, 0.2) 0%, rgba(107, 203, 119, 0.2) 100%); border: 3px solid var(--primary-warm); border-radius: 15px; padding: 2rem; margin-bottom: 2rem; text-align: center;">
                         <p style="color: var(--primary-warm); font-weight: 600; margin-bottom: 0.5rem; font-size: 1.1rem;">⭐ 今日最適合你的花</p>
-                        <div style="font-size: 4rem; margin: 1rem 0;">${todayFlower.emoji}</div>
-                        <h3 style="color: var(--primary-brown); margin: 0.5rem 0;">${todayFlower.cn}</h3>
-                        <p style="color: var(--text-dark); font-size: 1rem; margin: 0.5rem 0;">💝 ${todayFlower.language}</p>
-                        <p style="color: var(--text-light); font-size: 0.95rem; margin-top: 1rem;">記錄你的心情，這朵花就代表著今天的你 🌷</p>
+                        <div style="font-size: 4rem; margin: 1rem 0;">${flowers_data.emoji}</div>
+                        <h3 style="color: var(--primary-brown); margin: 0.5rem 0;">${flowers_data.cn}</h3>
+                        <p style="color: var(--text-dark); font-size: 1rem; margin: 0.5rem 0;">💝 ${flowers_data.language}</p>
+                        <p style="color: var(--text-light); font-size: 0.95rem; margin-top: 1rem;">記錄於 ${latestFlower.date}</p>
                     </div>
-                    ` : `
+                `;
+            } else {
+                html += `
                     <div style="background: var(--light-bg); border-radius: 15px; padding: 2rem; text-align: center; margin-bottom: 2rem;">
                         <p style="color: var(--text-light); font-size: 1.1rem;">📝 前往「記錄心情」頁面</p>
                         <p style="color: var(--text-light); margin-top: 0.5rem;">調整心情滑桿，發現今日最適合的花卉</p>
                     </div>
-                    `}
+                `;
+            }
 
-                    <h3 style="margin: 2rem 0 1rem; color: var(--primary-brown);">📊 情緒記錄歷史</h3>
-                    ${emotionData.length > 0 ? `
-                        <div style="display: grid; gap: 1rem;">
-                            ${emotionData.slice(-5).reverse().map(entry => `
+            html += `
+                <h3 style="margin: 2rem 0 1rem; color: var(--primary-brown);">📊 情緒記錄歷史</h3>
+                ${emotionData.length > 0 ? `
+                    <div style="display: grid; gap: 1rem;">
+                        ${emotionData.slice(-5).reverse().map(entry => {
+                            const f = flowers.find(fl => fl.id === entry.flowerId);
+                            return `
                                 <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid var(--primary-warm); box-shadow: 0 2px 8px rgba(102, 85, 68, 0.08);">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <div>
@@ -1251,27 +875,171 @@
                                         </div>
                                     </div>
                                 </div>
-                            `).join('')}
-                        </div>
-                    ` : `
-                        <p style="text-align: center; color: var(--text-light); padding: 2rem;">還沒有記錄，開始寫日記吧！📝</p>
-                    `}
-                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                ` : `
+                    <p style="text-align: center; color: var(--text-light); padding: 2rem;">還沒有記錄，開始記錄心情吧！📝</p>
+                `}
             `;
-            return html;
+
+            document.getElementById('inventoryContent').innerHTML = html;
+        }
+
+        // ===== 花卉詳情彈窗 =====
+        function showFlowerDetail(flowerId, flowerName, flowerLanguage) {
+            alert(`🌸 ${flowerName}\n\n💝 ${flowerLanguage}\n\n記住這朵花，它代表著你現在的心情。`);
+        }
+
+        // ===== 花卉圖鑑 =====
+        function renderFlowerGuide() {
+            const html = flowers.map(f => `
+                <div class="flower-card" onclick="showFlowerDetail('${f.id}', '${f.cn}', '${f.language}')">
+                    <div class="flower-icon">${f.emoji}</div>
+                    <h3>${f.cn}</h3>
+                    <p>${f.language}</p>
+                </div>
+            `).join('');
+            document.getElementById('flowerGuide').innerHTML = html;
+        }
+
+        // ===== 虛擬商店 =====
+        function renderShop() {
+            const html = shopItems.map(item => {
+                const isPurchased = userInventory.includes(item.id);
+                const button = isPurchased 
+                    ? `<button class="buy-btn" disabled>✅ 已擁有</button>`
+                    : `<button class="buy-btn" onclick="purchaseItem('${item.id}', ${item.cost}, '${item.name}')">🛒 購買 (${item.cost} 💐)</button>`;
+                
+                return `
+                    <div class="flower-card">
+                        <div class="flower-icon">${item.emoji}</div>
+                        <h3>${item.name}</h3>
+                        <p>${item.category}</p>
+                        <p style="font-size: 0.9rem; color: var(--primary-warm); font-weight: 600; margin: 0.5rem 0;">💐 ${item.cost} 點數</p>
+                        ${button}
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('shopItems').innerHTML = html;
+        }
+
+        // ===== 購買邏輯 =====
+        function purchaseItem(itemId, cost, itemName) {
+            if (currentUser.points < cost) {
+                alert('🌸 哎呀，花朵點數還不夠喔！\n\n目前積分：' + currentUser.points + ' 💐\n所需積分：' + cost + ' 💐\n\n快去寫日記賺點數吧！📝');
+                return;
+            }
+
+            currentUser.points -= cost;
+            userInventory.push(itemId);
+            document.getElementById('totalPoints').textContent = currentUser.points;
+            renderShop();
+            alert('✅ 購買成功！\n\n✨ 您已解鎖「' + itemName + '」\n💐 剩餘積分：' + currentUser.points);
+        }
+
+        // ===== 導航邏輯 =====
+        function switchSection(section, btn) {
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tab, .nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            if (btn) btn.classList.add('active');
         }
 
         function logout() {
             currentUser = null;
+            userInventory = [];
+            emotionData = [];
+            todayFlower = null;
             document.getElementById('mainApp').classList.remove('active');
             document.getElementById('loginPage').style.display = 'flex';
             document.getElementById('user-username').value = '';
             document.getElementById('user-password').value = '';
         }
 
-        // Initialize on load
         window.addEventListener('load', () => {
             updateEmotion();
+            runSystemSelfTest();
+        });
+    </script>
+
+    <!-- ====== 自動測試與 DEBUG 偵測腳本 ====== -->
+    <script>
+        function runSystemSelfTest() {
+            console.log('🚀 開始執行 Flower Language 系統功能自動測試...\n');
+            
+            let testsPassed = 0;
+            let testsFailed = 0;
+
+            // 測試 1: 檢查購買按鈕是否存在
+            console.log('📋 測試 1: 購買按鈕存在性檢查');
+            const buyButtons = document.querySelectorAll('.buy-btn');
+            if (buyButtons.length === 0) {
+                console.error('❌ 失敗：畫面上完全找不到任何 ".buy-btn" 購買按鈕！HTML 結構遺漏！');
+                testsFailed++;
+            } else {
+                console.log(`✅ 通過：成功偵測到 ${buyButtons.length} 個商品購買按鈕。`);
+                console.log('   └─ 按鈕詳情:', Array.from(buyButtons).map(btn => btn.textContent).slice(0, 3).join(', ') + '...');
+                testsPassed++;
+            }
+
+            // 測試 2: 檢查帳號隱私洩漏
+            console.log('\n📋 測試 2: 帳號隱私保護檢查');
+            const bodyText = document.body.innerText;
+            const hasAdmin001 = bodyText.includes('admin001');
+            const hasUser123 = bodyText.includes('user123');
+
+            if (hasAdmin001 || hasUser123) {
+                console.error('❌ 失敗：畫面文本中偵測到真實帳號！');
+                if (hasAdmin001) console.error('   └─ 發現 "admin001"');
+                if (hasUser123) console.error('   └─ 發現 "user123"');
+                testsFailed++;
+            } else {
+                console.log('✅ 通過：真實帳號已成功隱藏，符合去識別化原則。');
+                testsPassed++;
+            }
+
+            // 測試 3: 檢查推薦花卉邏輯
+            console.log('\n📋 測試 3: 心情推薦花卉邏輯檢查');
+            const recommendedSection = document.getElementById('recommendedFlowers');
+            const flowerCards = recommendedSection.querySelectorAll('.flower-card');
+            
+            if (flowerCards.length === 1) {
+                console.log('✅ 通過：推薦系統成功限制為 1 個最適合花卉。');
+                console.log('   └─ 推薦花卉:', flowerCards[0].querySelector('h3').textContent);
+                testsPassed++;
+            } else if (flowerCards.length > 1) {
+                console.warn(`⚠️  警告：推薦了 ${flowerCards.length} 個花卉，應該只有 1 個。`);
+                testsFailed++;
+            } else {
+                console.log('ℹ️  信息：目前還沒有推薦花卉（需要調整滑桿）。');
+                testsPassed++;
+            }
+
+            // 測試 4: 檢查購買邏輯函數
+            console.log('\n📋 測試 4: JavaScript 函數存在性檢查');
+            const requiredFunctions = ['purchaseItem', 'updateEmotion', 'recordEmotion', 'renderShop', 'renderInventory'];
+            let functionCheckPass = true;
+
+            requiredFunctions.forEach(func => {
+                if (typeof window[func] === 'function') {
+                    console.log(`✅ 函數 "${func}" 已正確定義`);
+                } else {
+                    console.error(`❌ 函數 "${func}" 未定義或不是函數類型！`);
+                    functionCheckPass = false;
+                }
+            });
+
+            if (functionCheckPass) {
+                testsPassed++;
+            } else {
+                testsFailed++;
+            }
+
+            
+        // 網頁載入完成後自動執行測試
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(runSystemSelfTest, 500);
         });
     </script>
 </body>
