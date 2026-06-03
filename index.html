@@ -616,73 +616,135 @@
             </div>
 
             <!-- ADMIN: MANAGE FLOWERS -->
-            <div id="manage-flowers" class="section admin-only" style="display:none;">
+            <div id="manage-flowers" class="section">
                 <div class="card">
                     <h2>🌸 管理花卉</h2>
-                    <form onsubmit="addNewFlower(event)" style="background: var(--light-bg); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--primary-warm);">添加新花卉</h3>
-                        <div class="form-group">
-                            <label>花卉名稱（中文）</label>
-                            <input type="text" id="flower-cn-name" placeholder="例：向日葵" required>
-                        </div>
-                        <div class="form-group">
-                            <label>花語</label>
-                            <input type="text" id="flower-language" placeholder="例：熱情、忠誠" required>
-                        </div>
-                        <div class="form-group">
-                            <label>愉悅度（-1 到 1）</label>
-                            <input type="number" id="flower-valence" min="-1" max="1" step="0.1" placeholder="0.5" required>
-                        </div>
-                        <div class="form-group">
-                            <label>能量水平（-1 到 1）</label>
-                            <input type="number" id="flower-arousal" min="-1" max="1" step="0.1" placeholder="0.5" required>
-                        </div>
-                        <button type="submit" class="submit-btn">✅ 添加花卉</button>
-                    </form>
-                    <h3 style="margin: 2rem 0 1rem; color: var(--primary-warm);">現有花卉</h3>
+                    
+                    <!-- 新增花卉表單 -->
+                    <div style="background: var(--light-bg); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1.5rem; color: var(--primary-warm); font-size: 1.3rem;">➕ 新增花卉</h3>
+                        <form onsubmit="addNewFlower(event)">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div class="form-group">
+                                    <label>🌺 花卉名稱（中文）</label>
+                                    <input type="text" id="flower-cn-name" placeholder="例：向日葵" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>📝 英文名稱</label>
+                                    <input type="text" id="flower-en-name" placeholder="例：Sunflower">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>💝 花語含意</label>
+                                <input type="text" id="flower-language" placeholder="例：熱情、忠誠、崇拜" required>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div class="form-group">
+                                    <label>📊 愉悅度 (Valence)</label>
+                                    <input type="number" id="flower-valence" min="-1" max="1" step="0.1" placeholder="0.5" value="0.5" required>
+                                    <small style="color: var(--text-light);">-1（悲傷） ← → 1（開心）</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>⚡ 能量水平 (Arousal)</label>
+                                    <input type="number" id="flower-arousal" min="-1" max="1" step="0.1" placeholder="0.5" value="0.5" required>
+                                    <small style="color: var(--text-light);">-1（疲憊） ← → 1（興奮）</small>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>🖼️ 花卉圖片（可選）</label>
+                                <input type="file" id="flower-image" accept="image/*" style="padding: 8px;">
+                                <small style="color: var(--text-light);">支持 JPG、PNG 格式（演示版本不會實際上傳）</small>
+                            </div>
+
+                            <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, #6BCB77 0%, #4CAF50 100%); margin-top: 1rem;">✅ 新增花卉</button>
+                        </form>
+                    </div>
+
+                    <!-- 現有花卉列表 -->
+                    <h3 style="margin: 2rem 0 1.5rem; color: var(--primary-brown); font-size: 1.3rem;">📋 現有花卉列表</h3>
                     <div id="flower-management-list" style="display: grid; gap: 1rem;"></div>
                 </div>
             </div>
 
             <!-- ADMIN: MANAGE SHOP -->
-            <div id="manage-shop" class="section admin-only" style="display:none;">
+            <div id="manage-shop" class="section">
                 <div class="card">
                     <h2>📦 管理商品</h2>
-                    <form onsubmit="addNewShopItem(event)" style="background: var(--light-bg); padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--primary-warm);">添加新商品</h3>
-                        <div class="form-group">
-                            <label>商品名稱</label>
-                            <input type="text" id="shop-name" placeholder="例：楓糖燕麥背景" required>
-                        </div>
-                        <div class="form-group">
-                            <label>分類</label>
-                            <select id="shop-category" required>
-                                <option value="">選擇分類</option>
-                                <option value="背景">背景</option>
-                                <option value="貼紙">貼紙</option>
-                                <option value="音樂">音樂</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>價格（積分）</label>
-                            <input type="number" id="shop-cost" min="0" placeholder="100" required>
-                        </div>
-                        <button type="submit" class="submit-btn">✅ 添加商品</button>
-                    </form>
-                    <h3 style="margin: 2rem 0 1rem; color: var(--primary-warm);">現有商品</h3>
+                    
+                    <!-- 上架新商品表單 -->
+                    <div style="background: var(--light-bg); padding: 2rem; border-radius: 15px; margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1.5rem; color: var(--primary-warm); font-size: 1.3rem;">➕ 上架新商品</h3>
+                        <form onsubmit="addNewShopItem(event)">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div class="form-group">
+                                    <label>📦 商品名稱</label>
+                                    <input type="text" id="shop-name" placeholder="例：楓糖燕麥背景" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>📂 商品分類</label>
+                                    <select id="shop-category" required>
+                                        <option value="">-- 選擇分類 --</option>
+                                        <option value="日記本背景">🎨 日記本背景</option>
+                                        <option value="貼紙包">✨ 貼紙包</option>
+                                        <option value="BGM">🎵 背景音樂（BGM）</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div class="form-group">
+                                    <label>💰 點數定價</label>
+                                    <input type="number" id="shop-cost" min="0" step="10" placeholder="100" value="100" required>
+                                    <small style="color: var(--text-light);">用戶需要花費的積分數量</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>🏷️ 商品 Emoji 代碼</label>
+                                    <input type="text" id="shop-emoji" placeholder="例：🎨 或 ✨" value="📦" required>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div class="form-group">
+                                    <label>📁 上傳素材檔案（可選）</label>
+                                    <input type="file" id="shop-file" style="padding: 8px;">
+                                    <small style="color: var(--text-light);">圖片或音頻文件</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>🎨 顏色代碼（替代方案）</label>
+                                    <input type="color" id="shop-color" value="#E6A15C" style="height: 40px; cursor: pointer;">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>📝 商品描述</label>
+                                <textarea id="shop-description" placeholder="輸入商品介紹..." style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid var(--light-bg); font-family: inherit; min-height: 80px;"></textarea>
+                            </div>
+
+                            <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, #FF9966 0%, #FF6B6B 100%); margin-top: 1rem;">✅ 確認上架</button>
+                        </form>
+                    </div>
+
+                    <!-- 已上架商品清單 -->
+                    <h3 style="margin: 2rem 0 1.5rem; color: var(--primary-brown); font-size: 1.3rem;">🛍️ 已上架商品清單</h3>
                     <div id="shop-management-list" style="display: grid; gap: 1rem;"></div>
                 </div>
             </div>
 
             <!-- ADMIN: CONTENT MODERATION -->
-            <div id="moderation" class="section admin-only" style="display:none;">
+            <div id="moderation" class="section">
                 <div class="card">
                     <h2>🔍 內容審查</h2>
-                    <div style="background: var(--light-bg); padding: 1.5rem; border-radius: 10px; text-align: center;">
-                        <p style="color: var(--text-light); margin-bottom: 1rem;">📋 待審查的貼文</p>
-                        <div style="font-size: 3rem; margin: 1rem 0;">📝</div>
-                        <p style="color: var(--text-light);">目前沒有待審查的內容</p>
-                        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 1rem;">當有用戶檢舉達 3 次的貼文將自動進入審查佇列</p>
+                    <div style="background: var(--light-bg); padding: 2rem; border-radius: 15px; text-align: center;">
+                        <p style="color: var(--text-light); margin-bottom: 1rem; font-weight: 600;">📋 待審查的貼文</p>
+                        <div style="font-size: 4rem; margin: 2rem 0;">📝</div>
+                        <p style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 0.5rem;">目前沒有待審查的內容</p>
+                        <p style="font-size: 0.95rem; color: var(--text-light); margin-top: 1rem; line-height: 1.6;">
+                            ⚠️ 當有用戶檢舉達 3 次的貼文將自動進入審查佇列<br>
+                            ✅ 您可以選擇「通過」或「刪除」不當內容
+                        </p>
                     </div>
                 </div>
             </div>
@@ -814,24 +876,34 @@
         function addNewFlower(e) {
             e.preventDefault();
             const name = document.getElementById('flower-cn-name').value;
+            const enName = document.getElementById('flower-en-name').value || name;
             const language = document.getElementById('flower-language').value;
             const valence = parseFloat(document.getElementById('flower-valence').value);
             const arousal = parseFloat(document.getElementById('flower-arousal').value);
 
             flowers.push({
-                id: flowers.length + 1,
-                name: name,
+                id: Math.random().toString(36).substr(2, 9),
+                name: enName,
                 cn: name,
                 emoji: '🌺',
                 language: language,
                 tags: [],
                 valence: valence,
-                arousal: arousal
+                arousal: arousal,
+                createdAt: new Date().toLocaleDateString('zh-TW')
             });
 
-            alert('✅ 花卉已添加！');
+            alert('✅ 花卉已成功新增！');
             e.target.reset();
             renderFlowerManagement();
+        }
+
+        function deleteFlower(id) {
+            if (confirm('❓ 確定要刪除此花卉嗎？')) {
+                flowers = flowers.filter(f => f.id !== id);
+                renderFlowerManagement();
+                alert('✅ 花卉已刪除');
+            }
         }
 
         function addNewShopItem(e) {
@@ -839,39 +911,109 @@
             const name = document.getElementById('shop-name').value;
             const category = document.getElementById('shop-category').value;
             const cost = parseInt(document.getElementById('shop-cost').value);
+            const emoji = document.getElementById('shop-emoji').value;
+            const description = document.getElementById('shop-description').value;
 
             shopItems.push({
-                id: shopItems.length + 1,
+                id: Math.random().toString(36).substr(2, 9),
                 name: name,
-                emoji: '📦',
+                emoji: emoji,
                 category: category,
-                cost: cost
+                cost: cost,
+                description: description,
+                createdAt: new Date().toLocaleDateString('zh-TW')
             });
 
-            alert('✅ 商品已添加！');
+            alert('✅ 商品已成功上架！');
             e.target.reset();
+            document.getElementById('shop-emoji').value = '📦';
             renderShopManagement();
         }
 
+        function deleteShopItem(id) {
+            if (confirm('❓ 確定要下架此商品嗎？')) {
+                shopItems = shopItems.filter(item => item.id !== id);
+                renderShopManagement();
+                alert('✅ 商品已下架');
+            }
+        }
+
         function renderFlowerManagement() {
+            const listContainer = document.getElementById('flower-management-list');
+            
+            if (flowers.length === 0) {
+                listContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-light);">暫無花卉，請添加新花卉</div>';
+                return;
+            }
+
             const html = flowers.map(f => `
-                <div style="background: white; padding: 1rem; border-radius: 10px; border-left: 4px solid var(--primary-warm);">
-                    <strong>${f.cn}</strong> ${f.emoji}<br>
-                    <small style="color: var(--text-light);">${f.language}</small><br>
-                    <small>愉悅度: ${f.valence} | 能量: ${f.arousal}</small>
+                <div style="background: white; border-radius: 12px; padding: 1.5rem; border-left: 5px solid var(--primary-warm); box-shadow: 0 2px 8px rgba(102, 85, 68, 0.08); transition: all 0.3s;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span style="font-size: 2rem;">${f.emoji}</span>
+                                <h4 style="margin: 0; color: var(--primary-warm); font-size: 1.1rem;">${f.cn}</h4>
+                                <span style="color: var(--text-light); font-size: 0.9rem;">(${f.name})</span>
+                            </div>
+                            <p style="margin: 0.5rem 0; color: var(--text-dark);">💝 <strong>${f.language}</strong></p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.8rem;">
+                                <small style="color: var(--text-light);">📊 愉悅度：<strong>${f.valence}</strong></small>
+                                <small style="color: var(--text-light);">⚡ 能量水平：<strong>${f.arousal}</strong></small>
+                            </div>
+                            <small style="color: #999; display: block; margin-top: 0.5rem;">📅 建立於：${f.createdAt || '未知'}</small>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button onclick="editFlower('${f.id}')" style="padding: 8px 12px; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">✏️ 編輯</button>
+                            <button onclick="deleteFlower('${f.id}')" style="padding: 8px 12px; background: #FF6B6B; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">🗑️ 刪除</button>
+                        </div>
+                    </div>
                 </div>
             `).join('');
-            document.getElementById('flower-management-list').innerHTML = html || '<p style="color: var(--text-light);">暫無花卉</p>';
+            
+            listContainer.innerHTML = html;
         }
 
         function renderShopManagement() {
+            const listContainer = document.getElementById('shop-management-list');
+            
+            if (shopItems.length === 0) {
+                listContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-light);">暫無商品，請上架新商品</div>';
+                return;
+            }
+
             const html = shopItems.map(item => `
-                <div style="background: white; padding: 1rem; border-radius: 10px; border-left: 4px solid var(--primary-warm);">
-                    <strong>${item.name}</strong> ${item.emoji}<br>
-                    <small style="color: var(--text-light);">${item.category} · ${item.cost} 積分</small>
+                <div style="background: white; border-radius: 12px; padding: 1.5rem; border-left: 5px solid #FF9966; box-shadow: 0 2px 8px rgba(102, 85, 68, 0.08); transition: all 0.3s;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span style="font-size: 2rem;">${item.emoji}</span>
+                                <h4 style="margin: 0; color: var(--primary-warm); font-size: 1.1rem;">${item.name}</h4>
+                                <span style="background: var(--light-bg); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; color: var(--text-light);">${item.category}</span>
+                            </div>
+                            ${item.description ? `<p style="margin: 0.5rem 0; color: var(--text-dark); font-size: 0.95rem;">${item.description}</p>` : ''}
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.8rem;">
+                                <small style="color: var(--text-light);">💰 定價：<strong>${item.cost}</strong> 積分</small>
+                                <small style="color: var(--text-light);">📂 分類：<strong>${item.category}</strong></small>
+                            </div>
+                            <small style="color: #999; display: block; margin-top: 0.5rem;">📅 上架於：${item.createdAt || '未知'}</small>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button onclick="editShopItem('${item.id}')" style="padding: 8px 12px; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">✏️ 編輯</button>
+                            <button onclick="deleteShopItem('${item.id}')" style="padding: 8px 12px; background: #FF6B6B; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">🗑️ 下架</button>
+                        </div>
+                    </div>
                 </div>
             `).join('');
-            document.getElementById('shop-management-list').innerHTML = html || '<p style="color: var(--text-light);">暫無商品</p>';
+            
+            listContainer.innerHTML = html;
+        }
+
+        function editFlower(id) {
+            alert('✏️ 編輯功能開發中...\n花卉 ID：' + id);
+        }
+
+        function editShopItem(id) {
+            alert('✏️ 編輯功能開發中...\n商品 ID：' + id);
         }
 
         // ===== APP FUNCTIONS =====
