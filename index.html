@@ -3,28 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flower Language 花語心情 - 療癒你的每一天</title>
-    <link rel="stylesheet" href="./css/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Playfair+Display:wght@700;800&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Flower Language 花語心情網站</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            /* 療癒系暖色 */
-            --primary-warm: #E6A15C;       /* 暖橘 */
-            --primary-brown: #966F46;      /* 牛奶茶棕 */
-            --bg-cream: #FDFBF7;           /* 奶油白 */
-            --accent-tan: #D4A574;         /* 淡棕 */
-            --light-bg: #F5EBE6;           /* 淺麥色 */
-            --text-dark: #4A3728;          /* 深棕 */
-            --text-light: #7A6B60;         /* 淡棕 */
-            --shadow-soft: rgba(102, 85, 68, 0.08);
-            --shadow-medium: rgba(102, 85, 68, 0.15);
-            
-            /* 字型 */
-            --font-display: 'Playfair Display', serif;
-            --font-serif: 'Noto Serif TC', serif;
-            --font-body: 'Lora', serif;
+            --primary-warm: #E6A15C;
+            --primary-brown: #966F46;
+            --bg-cream: #FDFBF7;
+            --accent-tan: #D4A574;
+            --light-bg: #F5EBE6;
+            --text-dark: #4A3728;
+            --text-light: #7A6B60;
         }
 
         * {
@@ -33,67 +22,203 @@
             box-sizing: border-box;
         }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            background: var(--bg-cream);
+        body {
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #F9F3EB 100%);
+            font-family: 'Lora', serif;
             color: var(--text-dark);
-            font-family: var(--font-body);
-            line-height: 1.8;
-        }
-
-        /* ========== 背景紙張紋理 ========== */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                repeating-linear-gradient(
-                    0deg,
-                    rgba(0, 0, 0, 0.02) 0px,
-                    transparent 1px,
-                    transparent 2px,
-                    rgba(0, 0, 0, 0.02) 3px
-                );
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .page-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ========== 登陸頁面 ========== */
-        .login-container {
             min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ===== LOGIN PAGE ===== */
+        .login-page {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, var(--bg-cream) 0%, #F9F3EB 100%);
+            min-height: 100vh;
         }
 
-        .login-card {
-            width: 100%;
-            max-width: 500px;
+        .login-box {
             background: white;
             border-radius: 20px;
-            padding: 3rem 2.5rem;
-            box-shadow: 
-                0 20px 60px var(--shadow-medium),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(230, 161, 92, 0.2);
-            animation: slideUpFade 0.8s ease-out;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(102, 85, 68, 0.15);
         }
 
-        @keyframes slideUpFade {
+        .login-box h1 {
+            text-align: center;
+            color: var(--primary-warm);
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px;
+            border: 2px solid var(--light-bg);
+            background: var(--light-bg);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.3s;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-warm);
+            color: white;
+            border-color: var(--primary-warm);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--light-bg);
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-warm);
+            box-shadow: 0 0 0 3px rgba(230, 161, 92, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(230, 161, 92, 0.3);
+        }
+
+        .form-content {
+            display: none;
+        }
+
+        .form-content.active {
+            display: block;
+        }
+
+        .demo-credentials {
+            background: var(--light-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .demo-credentials strong {
+            color: var(--primary-warm);
+        }
+
+        /* ===== MAIN APP ===== */
+        .main-content {
+            display: none;
+        }
+
+        .main-content.active {
+            display: block;
+            padding-bottom: 150px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .nav-tab {
+            padding: 12px;
+            background: white;
+            border: 2px solid var(--light-bg);
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.3s;
+        }
+
+        .nav-tab.active {
+            background: var(--primary-warm);
+            color: white;
+            border-color: var(--primary-warm);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(40px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -101,350 +226,562 @@
             }
         }
 
-        .logo-section {
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(102, 85, 68, 0.08);
+        }
+
+        .card h2 {
+            color: var(--primary-warm);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        /* ===== SLIDER ===== */
+        .slider-group {
+            margin-bottom: 2rem;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #FF6B6B, #FFD93D, #6BCB77);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--primary-warm);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(102, 85, 68, 0.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--primary-warm);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(102, 85, 68, 0.2);
+        }
+
+        /* ===== FLOWER CARDS ===== */
+        .flower-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .flower-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
             text-align: center;
-            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 15px rgba(102, 85, 68, 0.08);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .flower-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(230, 161, 92, 0.15);
         }
 
         .flower-icon {
-            font-size: 4rem;
+            font-size: 3rem;
             margin-bottom: 1rem;
-            display: inline-block;
-            animation: floatGently 3s ease-in-out infinite;
         }
 
-        @keyframes floatGently {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .site-title {
-            font-family: var(--font-display);
-            font-size: 2.5rem;
+        .flower-card h3 {
             color: var(--primary-warm);
             margin-bottom: 0.5rem;
-            font-weight: 700;
-            letter-spacing: 1px;
+            font-size: 1.2rem;
         }
 
-        .site-subtitle {
-            font-family: var(--font-serif);
-            font-size: 1rem;
+        .flower-card p {
             color: var(--text-light);
-            font-weight: 400;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
-        /* ========== 表單 ========== */
-        .auth-tabs {
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 2px solid var(--light-bg);
+            padding: 1rem 2rem;
             display: flex;
-            margin-bottom: 2rem;
-            gap: 0;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
             background: var(--light-bg);
-            border-radius: 12px;
-            padding: 0.25rem;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 0.8rem 1.5rem;
             border: none;
-            background: transparent;
-            color: var(--text-light);
-            font-family: var(--font-body);
-            font-size: 0.95rem;
+            border-radius: 20px;
             cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.3s;
+            font-family: inherit;
+            font-size: 14px;
         }
 
-        .tab-btn.active {
-            background: white;
-            color: var(--primary-warm);
-            box-shadow: 0 4px 12px var(--shadow-soft);
+        .nav-btn.active {
+            background: var(--primary-warm);
+            color: white;
         }
 
-        .tab-content {
-            display: none;
+        .nav-btn:hover {
+            transform: translateY(-2px);
         }
 
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
+        .nav-btn.logout {
+            background: #FFB6B6;
+            color: white;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* ===== CHART ===== */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 2rem 0;
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
+        /* ===== STATS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
         }
 
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-dark);
-            font-size: 0.95rem;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.85rem 1rem;
-            border: 2px solid var(--light-bg);
-            border-radius: 10px;
-            font-family: var(--font-body);
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            background: var(--bg-cream);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-warm);
-            background: white;
-            box-shadow: 0 0 0 3px rgba(230, 161, 92, 0.1);
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 1rem;
+        .stat-box {
             background: linear-gradient(135deg, var(--primary-warm) 0%, #D89548 100%);
             color: white;
-            border: none;
-            border-radius: 10px;
-            font-family: var(--font-body);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(230, 161, 92, 0.3);
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(230, 161, 92, 0.4);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-
-        .info-text {
-            font-size: 0.85rem;
-            color: var(--text-light);
+            padding: 2rem;
+            border-radius: 15px;
             text-align: center;
-            margin-top: 1rem;
         }
 
-        /* ========== 演示帳號提示 ========== */
-        .demo-notice {
-            background: linear-gradient(135deg, rgba(230, 161, 92, 0.1) 0%, rgba(212, 165, 116, 0.1) 100%);
-            border-left: 4px solid var(--primary-warm);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        .demo-notice strong {
-            color: var(--primary-warm);
-            display: block;
+        .stat-box .number {
+            font-size: 2.5rem;
+            font-weight: bold;
             margin-bottom: 0.5rem;
         }
 
-        .demo-creds {
-            font-family: 'Courier New', monospace;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 0.75rem;
-            border-radius: 6px;
-            margin-top: 0.5rem;
-            line-height: 1.6;
-            font-size: 0.85rem;
+        .stat-box .label {
+            font-size: 0.95rem;
+            opacity: 0.9;
         }
 
-        /* ========== 響應式設計 ========== */
-        @media (max-width: 600px) {
-            .login-card {
-                padding: 2rem 1.5rem;
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
             }
 
-            .site-title {
-                font-size: 2rem;
+            .header h1 {
+                font-size: 1.8rem;
             }
 
-            .form-input, .submit-btn {
-                font-size: 16px; /* 防止 iOS 自動放大 */
+            .nav-tabs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .flower-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bottom-nav {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .nav-btn {
+                width: 100%;
+                padding: 12px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="page-content">
-        <div class="login-container">
-            <div class="login-card">
-                <!-- 標誌區塊 -->
-                <div class="logo-section">
-                    <div class="flower-icon">🌸</div>
-                    <h1 class="site-title">Flower Language</h1>
-                    <p class="site-subtitle">用花語記錄你的心情</p>
-                </div>
+    <!-- LOGIN PAGE -->
+    <div id="loginPage" class="login-page">
+        <div class="login-box">
+            <h1>🌸 Flower Language</h1>
+            <p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">花語心情網站</p>
 
-                <!-- 演示帳號提示 -->
-                <div class="demo-notice">
-                    <strong>🎯 快速試用</strong>
-                    <div class="demo-creds">
-                        一般使用者：user123 / password123<br>
-                        管理員：admin001 / adminPass123
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchLoginTab('user', this)">一般用戶</button>
+                <button class="tab-btn" onclick="switchLoginTab('admin', this)">管理員</button>
+            </div>
+
+            <!-- User Login -->
+            <div id="user-tab" class="form-content active">
+                <div class="demo-credentials">
+                    <strong>試用帳號：</strong><br>
+                    帳號：user123<br>
+                    密碼：password123
+                </div>
+                <form onsubmit="loginUser(event)">
+                    <div class="form-group">
+                        <label>帳號</label>
+                        <input type="text" id="user-username" placeholder="user123" required>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label>密碼</label>
+                        <input type="password" id="user-password" placeholder="password123" required>
+                    </div>
+                    <button type="submit" class="submit-btn">進入儀表板</button>
+                </form>
+            </div>
 
-                <!-- 認證頁籤 -->
-                <div class="auth-tabs">
-                    <button class="tab-btn active" onclick="switchTab('login')">登入</button>
-                    <button class="tab-btn" onclick="switchTab('register')">註冊</button>
-                    <button class="tab-btn" onclick="switchTab('admin-login')">管理員</button>
+            <!-- Admin Login -->
+            <div id="admin-tab" class="form-content">
+                <div class="demo-credentials">
+                    <strong>試用帳號：</strong><br>
+                    帳號：admin001<br>
+                    密碼：adminPass123
                 </div>
-
-                <!-- 登入表單 -->
-                <div id="login" class="tab-content active">
-                    <form onsubmit="handleLogin(event)">
-                        <div class="form-group">
-                            <label class="form-label">用戶名稱</label>
-                            <input type="text" class="form-input" id="login-username" placeholder="輸入用戶名稱" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">密碼</label>
-                            <input type="password" class="form-input" id="login-password" placeholder="輸入密碼" required>
-                        </div>
-                        <button type="submit" class="submit-btn">登入</button>
-                        <p class="info-text">新用戶？在上方選擇「註冊」創建帳號</p>
-                    </form>
-                </div>
-
-                <!-- 註冊表單 -->
-                <div id="register" class="tab-content">
-                    <form onsubmit="handleRegister(event)">
-                        <div class="form-group">
-                            <label class="form-label">用戶名稱</label>
-                            <input type="text" class="form-input" id="register-username" placeholder="選擇一個用戶名稱" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">電子郵件</label>
-                            <input type="email" class="form-input" id="register-email" placeholder="輸入電子郵件" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">密碼</label>
-                            <input type="password" class="form-input" id="register-password" placeholder="至少 6 個字元" required minlength="6">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">確認密碼</label>
-                            <input type="password" class="form-input" id="register-password-confirm" placeholder="再次輸入密碼" required>
-                        </div>
-                        <button type="submit" class="submit-btn">創建帳號</button>
-                        <p class="info-text">已有帳號？選擇「登入」即可</p>
-                    </form>
-                </div>
-
-                <!-- 管理員登入 -->
-                <div id="admin-login" class="tab-content">
-                    <form onsubmit="handleAdminLogin(event)">
-                        <div class="form-group">
-                            <label class="form-label">管理員用戶名稱</label>
-                            <input type="text" class="form-input" id="admin-username" placeholder="輸入管理員用戶名稱" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">管理員密碼</label>
-                            <input type="password" class="form-input" id="admin-password" placeholder="輸入管理員密碼" required>
-                        </div>
-                        <button type="submit" class="submit-btn">管理員登入</button>
-                        <p class="info-text">僅限授權管理員使用</p>
-                    </form>
-                </div>
+                <form onsubmit="loginAdmin(event)">
+                    <div class="form-group">
+                        <label>管理員帳號</label>
+                        <input type="text" id="admin-username" placeholder="admin001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>密碼</label>
+                        <input type="password" id="admin-password" placeholder="adminPass123" required>
+                    </div>
+                    <button type="submit" class="submit-btn">進入管理控制台</button>
+                </form>
             </div>
         </div>
     </div>
 
+    <!-- MAIN APP -->
+    <div id="mainApp" class="main-content">
+        <div class="container">
+            <div class="header" id="appHeader">
+                <h1>💭 Flower Language</h1>
+                <p id="headerSubtitle">記錄你的心情，探索花語的智慧</p>
+            </div>
+
+            <div class="nav-tabs" id="navTabs">
+                <button class="nav-tab active" onclick="switchSection('dashboard', this)">📊 儀表板</button>
+                <button class="nav-tab" onclick="switchSection('emotions', this)">💭 記錄心情</button>
+                <button class="nav-tab" onclick="switchSection('flowers', this)">🌺 花語圖鑑</button>
+                <button class="nav-tab" onclick="switchSection('shop', this)">🛍️ 商店</button>
+            </div>
+
+            <!-- DASHBOARD SECTION -->
+            <div id="dashboard" class="section active">
+                <div class="card">
+                    <h2>📊 我的心情趨勢</h2>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="number" id="totalDiaries">0</div>
+                            <div class="label">記錄次數</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number" id="totalPoints">0</div>
+                            <div class="label">獲得積分</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number" id="totalFlowers">0</div>
+                            <div class="label">花卉收集</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="emotionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EMOTION RECORD SECTION -->
+            <div id="emotions" class="section">
+                <div class="card">
+                    <h2>💭 今天的心情如何？</h2>
+
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>愉悅度</span>
+                            <span id="valenceValue" style="color: var(--primary-warm);">0.0</span>
+                        </div>
+                        <input type="range" id="valenceSlider" min="-1" max="1" step="0.1" value="0" oninput="updateEmotion()">
+                        <small style="color: var(--text-light);">左邊 ← 悲傷 | 開心 → 右邊</small>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>能量水平</span>
+                            <span id="arousalValue" style="color: var(--primary-warm);">0.0</span>
+                        </div>
+                        <input type="range" id="arousalSlider" min="-1" max="1" step="0.1" value="0" oninput="updateEmotion()">
+                        <small style="color: var(--text-light);">下方 ← 疲憊 | 興奮 → 上方</small>
+                    </div>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-warm);">為你推薦的花</h3>
+                    <div class="flower-grid" id="recommendedFlowers">
+                        <p style="grid-column: 1 / -1; text-align: center; color: var(--text-light);">調整滑桿以獲得推薦</p>
+                    </div>
+
+                    <button class="submit-btn" style="margin-top: 2rem;" onclick="recordEmotion()">✅ 記錄這個心情</button>
+                </div>
+            </div>
+
+            <!-- FLOWER GUIDE SECTION -->
+            <div id="flowers" class="section">
+                <div class="card">
+                    <h2>🌺 花語圖鑑</h2>
+                    <p style="margin-bottom: 2rem; color: var(--text-light);">探索 50+ 種花卉與它們的花語</p>
+                    <div class="flower-grid" id="flowerGuide"></div>
+                </div>
+            </div>
+
+            <!-- SHOP SECTION -->
+            <div id="shop" class="section">
+                <div class="card">
+                    <h2>🛍️ 虛擬商店</h2>
+                    <p style="margin-bottom: 2rem; color: var(--text-light);">用積分購買日記背景、貼紙和音樂</p>
+                    <div class="flower-grid" id="shopItems"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION -->
+        <div class="bottom-nav">
+            <button class="nav-btn active" onclick="switchSection('dashboard', this)">📊 儀表板</button>
+            <button class="nav-btn" onclick="switchSection('emotions', this)">💭 心情</button>
+            <button class="nav-btn" onclick="switchSection('flowers', this)">🌺 圖鑑</button>
+            <button class="nav-btn" onclick="switchSection('shop', this)">🛍️ 商店</button>
+            <button class="nav-btn logout" onclick="logout()">🚪 登出</button>
+        </div>
+    </div>
+
     <script>
-        // 簡單的本地儲存認證（前端演示）
-        function switchTab(tabName) {
-            const tabs = document.querySelectorAll('.tab-content');
-            const buttons = document.querySelectorAll('.tab-btn');
-            
-            tabs.forEach(tab => tab.classList.remove('active'));
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+        // ===== FLOWERS DATA =====
+        const flowers = [
+            { id: 1, name: 'Sunflower', cn: '向日葵', emoji: '🌻', language: '熱情、忠誠', tags: ['happy', 'energetic'], valence: 0.95, arousal: 0.85 },
+            { id: 2, name: 'Lavender', cn: '薰衣草', emoji: '💜', language: '寧靜、優雅', tags: ['peaceful', 'calm'], valence: 0.3, arousal: -0.7 },
+            { id: 3, name: 'Rose', cn: '玫瑰', emoji: '🌹', language: '愛情、美麗', tags: ['love', 'beautiful'], valence: 0.8, arousal: 0.5 },
+            { id: 4, name: 'Lotus', cn: '蓮花', emoji: '🪷', language: '純潔、覺悟', tags: ['pure', 'spiritual'], valence: 0.65, arousal: 0.1 },
+            { id: 5, name: 'Tulip', cn: '鬱金香', emoji: '🌷', language: '優雅、完美', tags: ['elegant', 'perfect'], valence: 0.75, arousal: 0.4 },
+            { id: 6, name: 'Daisy', cn: '雛菊', emoji: '🌼', language: '天真、快樂', tags: ['innocent', 'happy'], valence: 0.85, arousal: 0.7 },
+            { id: 7, name: 'Iris', cn: '鳶尾花', emoji: '🩵', language: '勇氣、智慧', tags: ['brave', 'wisdom'], valence: 0.6, arousal: 0.6 },
+            { id: 8, name: 'Cherry Blossom', cn: '櫻花', emoji: '🌸', language: '美麗、希望', tags: ['beautiful', 'hope'], valence: 0.7, arousal: 0.5 },
+        ];
+
+        const shopItems = [
+            { id: 1, name: '楓糖燕麥', emoji: '🟤', category: '背景', cost: 0 },
+            { id: 2, name: '黎明楓葉', emoji: '🍂', category: '背景', cost: 200 },
+            { id: 3, name: '午後向日葵', emoji: '☀️', category: '背景', cost: 350 },
+            { id: 4, name: '療癒花卉貼紙', emoji: '✨', category: '貼紙', cost: 100 },
+            { id: 5, name: '溫暖線條分隔線', emoji: '📏', category: '貼紙', cost: 150 },
+            { id: 6, name: '森林雨聲', emoji: '🎵', category: '音樂', cost: 500 },
+        ];
+
+        // ===== STATE =====
+        let currentUser = null;
+        let emotionData = [];
+
+        // ===== LOGIN FUNCTIONS =====
+        function switchLoginTab(tab, btn) {
+            document.querySelectorAll('.form-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tabs .tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab + '-tab').classList.add('active');
+            btn.classList.add('active');
         }
 
-        function handleLogin(e) {
+        function loginUser(e) {
             e.preventDefault();
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-            
-            // 演示帳號驗證
+            const username = document.getElementById('user-username').value;
+            const password = document.getElementById('user-password').value;
+
             if (username === 'user123' && password === 'password123') {
-                localStorage.setItem('currentUser', JSON.stringify({
-                    userId: 'user001',
-                    username: username,
-                    role: 'user',
-                    loginTime: new Date().toISOString()
-                }));
-                window.location.href = './dashboard.html';
+                currentUser = { username, role: 'user', points: 500, diaries: 3 };
+                showApp();
             } else {
-                alert('❌ 用戶名稱或密碼錯誤\n\n試用帳號：\n用戶名稱：user123\n密碼：password123');
+                alert('❌ 用戶名稱或密碼錯誤');
             }
         }
 
-        function handleRegister(e) {
-            e.preventDefault();
-            const username = document.getElementById('register-username').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const confirm = document.getElementById('register-password-confirm').value;
-
-            if (password !== confirm) {
-                alert('❌ 密碼不相符');
-                return;
-            }
-
-            // 模擬註冊（實際應連接後端）
-            localStorage.setItem('currentUser', JSON.stringify({
-                userId: 'user' + Date.now(),
-                username: username,
-                email: email,
-                role: 'user',
-                totalPoints: 0,
-                totalDiaries: 0,
-                loginTime: new Date().toISOString()
-            }));
-            
-            alert('✅ 帳號已創建！即將進入平台...');
-            window.location.href = './dashboard.html';
-        }
-
-        function handleAdminLogin(e) {
+        function loginAdmin(e) {
             e.preventDefault();
             const username = document.getElementById('admin-username').value;
             const password = document.getElementById('admin-password').value;
 
             if (username === 'admin001' && password === 'adminPass123') {
-                localStorage.setItem('currentUser', JSON.stringify({
-                    adminId: 'admin001',
-                    username: username,
-                    role: 'admin',
-                    permissions: ['MANAGE_FLOWERS', 'MANAGE_SHOP', 'REVIEW_POSTS', 'VIEW_ANALYTICS'],
-                    loginTime: new Date().toISOString()
-                }));
-                // 正確的相對路徑
-                window.location.href = './admin/dashboard.html';
+                currentUser = { username, role: 'admin', permissions: ['manage', 'review'] };
+                showApp(true);
             } else {
-                alert('❌ 管理員用戶名稱或密碼錯誤\n\n試用帳號：\n用戶名稱：admin001\n密碼：adminPass123');
+                alert('❌ 管理員帳號或密碼錯誤');
             }
         }
+
+        function showApp(isAdmin = false) {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('mainApp').classList.add('active');
+
+            if (isAdmin) {
+                document.getElementById('appHeader').innerHTML = '<h1>👑 管理員控制台</h1><p>歡迎，' + currentUser.username + '</p>';
+            } else {
+                document.getElementById('appHeader').innerHTML = '<h1>💭 ' + currentUser.username + ' 的花語世界</h1><p>記錄你的心情，探索花語的智慧</p>';
+            }
+
+            initializeApp();
+        }
+
+        // ===== APP FUNCTIONS =====
+        function switchSection(section, btn) {
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tab, .nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            if (btn) btn.classList.add('active');
+        }
+
+        function initializeApp() {
+            renderFlowerGuide();
+            renderShop();
+            renderDashboard();
+        }
+
+        function updateEmotion() {
+            const valence = parseFloat(document.getElementById('valenceSlider').value);
+            const arousal = parseFloat(document.getElementById('arousalSlider').value);
+
+            document.getElementById('valenceValue').textContent = valence.toFixed(1);
+            document.getElementById('arousalValue').textContent = arousal.toFixed(1);
+
+            // Find closest flowers
+            const recommended = flowers
+                .map(f => ({
+                    ...f,
+                    distance: Math.sqrt(Math.pow(valence - f.valence, 2) + Math.pow(arousal - f.arousal, 2))
+                }))
+                .sort((a, b) => a.distance - b.distance)
+                .slice(0, 3);
+
+            renderRecommended(recommended);
+        }
+
+        function renderRecommended(flowers) {
+            const html = flowers.map(f => `
+                <div class="flower-card">
+                    <div class="flower-icon">${f.emoji}</div>
+                    <h3>${f.cn}</h3>
+                    <p>${f.language}</p>
+                </div>
+            `).join('');
+            document.getElementById('recommendedFlowers').innerHTML = html;
+        }
+
+        function renderFlowerGuide() {
+            const html = flowers.map(f => `
+                <div class="flower-card">
+                    <div class="flower-icon">${f.emoji}</div>
+                    <h3>${f.cn}</h3>
+                    <p>${f.language}</p>
+                </div>
+            `).join('');
+            document.getElementById('flowerGuide').innerHTML = html;
+        }
+
+        function renderShop() {
+            const html = shopItems.map(item => `
+                <div class="flower-card">
+                    <div class="flower-icon">${item.emoji}</div>
+                    <h3>${item.name}</h3>
+                    <p>${item.category} · ${item.cost} 積分</p>
+                </div>
+            `).join('');
+            document.getElementById('shopItems').innerHTML = html;
+        }
+
+        function renderDashboard() {
+            document.getElementById('totalDiaries').textContent = currentUser.diaries || 0;
+            document.getElementById('totalPoints').textContent = currentUser.points || 0;
+            document.getElementById('totalFlowers').textContent = flowers.length;
+
+            // Simple chart
+            setTimeout(() => {
+                const ctx = document.getElementById('emotionChart');
+                if (ctx && !window.emotionChartInstance) {
+                    window.emotionChartInstance = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                            datasets: [{
+                                label: '愉悅度',
+                                data: [0.3, 0.4, 0.5, 0.4, 0.4, 0.6, 0.5],
+                                borderColor: '#E6A15C',
+                                backgroundColor: 'rgba(230, 161, 92, 0.1)',
+                                tension: 0.3
+                            }, {
+                                label: '能量水平',
+                                data: [-0.2, 0.1, 0.2, 0.1, 0.2, 0.4, 0.3],
+                                borderColor: '#6BCB77',
+                                backgroundColor: 'rgba(107, 203, 119, 0.1)',
+                                tension: 0.3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { labels: { font: { family: "'Lora', serif" } } } },
+                            scales: { y: { beginAtZero: true, max: 1, min: -1 } }
+                        }
+                    });
+                }
+            }, 100);
+        }
+
+        function recordEmotion() {
+            const valence = document.getElementById('valenceSlider').value;
+            const arousal = document.getElementById('arousalSlider').value;
+            alert('✅ 心情已記錄！\n愉悅度：' + valence + '\n能量水平：' + arousal);
+            currentUser.diaries = (currentUser.diaries || 0) + 1;
+            currentUser.points = (currentUser.points || 0) + 50;
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('mainApp').classList.remove('active');
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('user-username').value = '';
+            document.getElementById('user-password').value = '';
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            updateEmotion();
+        });
     </script>
 </body>
 </html>
